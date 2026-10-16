@@ -347,6 +347,10 @@
 .mh::before,.mh::after,.mh *::before,.mh *::after,
 .ft::before,.ft::after,.ft *::before,.ft *::after,
 .sc-host::before,.sc-host::after,.sc-host *::before,.sc-host *::after{all:revert}
+/* Restore the demo's universal reset at a specificity that wins over the
+   containment reset above. Without this, UA list indentation shifts footer
+   links and content-box sizing makes the CTA button taller than the demo. */
+.mh,.mh *,.ft,.ft *,.sc-host,.sc-host *{box-sizing:border-box;margin:0;padding:0}
 
 :root{--ink:#111315;--ink2:#1C1F22;--sig:#C81D25;--sig2:#9E141B;--dim:#6B7280;--txt:#2E3338;--line:#D8DCE0;--wash:#F4F5F6;--san:'Archivo',system-ui,sans-serif;--mono:'Roboto Mono',monospace}
 *{box-sizing:border-box;margin:0;padding:0}
