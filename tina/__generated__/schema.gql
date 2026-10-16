@@ -448,6 +448,38 @@ type PageBlocksAboutMockup17Newsroom {
   contacts: [PageBlocksAboutMockup17NewsroomContacts]
 }
 
+type PageBlocksAboutMockup17PublicationHeaderFacts {
+  label: String
+  value: String
+}
+
+type PageBlocksAboutMockup17PublicationHeader {
+  eyebrow: String
+  headline: String
+  description: String
+  facts: [PageBlocksAboutMockup17PublicationHeaderFacts]
+}
+
+type PageBlocksAboutMockup17DocumentSectionsParagraphs {
+  text: String
+}
+
+type PageBlocksAboutMockup17DocumentSectionsPrinciples {
+  number: String
+  text: String
+}
+
+type PageBlocksAboutMockup17DocumentSections {
+  number: String
+  navTitle: String
+  sectionLabel: String
+  title: String
+  lead: String
+  paragraphs: [PageBlocksAboutMockup17DocumentSectionsParagraphs]
+  principles: [PageBlocksAboutMockup17DocumentSectionsPrinciples]
+  note: String
+}
+
 type PageBlocksAboutMockup17 {
   hero: PageBlocksAboutMockup17Hero
   purpose: PageBlocksAboutMockup17Purpose
@@ -455,6 +487,8 @@ type PageBlocksAboutMockup17 {
   standardsSection: PageBlocksAboutMockup17StandardsSection
   independence: PageBlocksAboutMockup17Independence
   newsroom: PageBlocksAboutMockup17Newsroom
+  publicationHeader: PageBlocksAboutMockup17PublicationHeader
+  documentSections: [PageBlocksAboutMockup17DocumentSections]
 }
 
 type PageBlocksOurTeamMockup17Hero {
@@ -854,6 +888,38 @@ input PageBlocksAboutMockup17NewsroomFilter {
   contacts: PageBlocksAboutMockup17NewsroomContactsFilter
 }
 
+input PageBlocksAboutMockup17PublicationHeaderFactsFilter {
+  label: StringFilter
+  value: StringFilter
+}
+
+input PageBlocksAboutMockup17PublicationHeaderFilter {
+  eyebrow: StringFilter
+  headline: StringFilter
+  description: StringFilter
+  facts: PageBlocksAboutMockup17PublicationHeaderFactsFilter
+}
+
+input PageBlocksAboutMockup17DocumentSectionsParagraphsFilter {
+  text: StringFilter
+}
+
+input PageBlocksAboutMockup17DocumentSectionsPrinciplesFilter {
+  number: StringFilter
+  text: StringFilter
+}
+
+input PageBlocksAboutMockup17DocumentSectionsFilter {
+  number: StringFilter
+  navTitle: StringFilter
+  sectionLabel: StringFilter
+  title: StringFilter
+  lead: StringFilter
+  paragraphs: PageBlocksAboutMockup17DocumentSectionsParagraphsFilter
+  principles: PageBlocksAboutMockup17DocumentSectionsPrinciplesFilter
+  note: StringFilter
+}
+
 input PageBlocksAboutMockup17Filter {
   hero: PageBlocksAboutMockup17HeroFilter
   purpose: PageBlocksAboutMockup17PurposeFilter
@@ -861,6 +927,8 @@ input PageBlocksAboutMockup17Filter {
   standardsSection: PageBlocksAboutMockup17StandardsSectionFilter
   independence: PageBlocksAboutMockup17IndependenceFilter
   newsroom: PageBlocksAboutMockup17NewsroomFilter
+  publicationHeader: PageBlocksAboutMockup17PublicationHeaderFilter
+  documentSections: PageBlocksAboutMockup17DocumentSectionsFilter
 }
 
 input PageBlocksOurTeamMockup17HeroFilter {
@@ -1591,6 +1659,38 @@ input PageBlocksAboutMockup17NewsroomMutation {
   contacts: [PageBlocksAboutMockup17NewsroomContactsMutation]
 }
 
+input PageBlocksAboutMockup17PublicationHeaderFactsMutation {
+  label: String
+  value: String
+}
+
+input PageBlocksAboutMockup17PublicationHeaderMutation {
+  eyebrow: String
+  headline: String
+  description: String
+  facts: [PageBlocksAboutMockup17PublicationHeaderFactsMutation]
+}
+
+input PageBlocksAboutMockup17DocumentSectionsParagraphsMutation {
+  text: String
+}
+
+input PageBlocksAboutMockup17DocumentSectionsPrinciplesMutation {
+  number: String
+  text: String
+}
+
+input PageBlocksAboutMockup17DocumentSectionsMutation {
+  number: String
+  navTitle: String
+  sectionLabel: String
+  title: String
+  lead: String
+  paragraphs: [PageBlocksAboutMockup17DocumentSectionsParagraphsMutation]
+  principles: [PageBlocksAboutMockup17DocumentSectionsPrinciplesMutation]
+  note: String
+}
+
 input PageBlocksAboutMockup17Mutation {
   hero: PageBlocksAboutMockup17HeroMutation
   purpose: PageBlocksAboutMockup17PurposeMutation
@@ -1598,6 +1698,8 @@ input PageBlocksAboutMockup17Mutation {
   standardsSection: PageBlocksAboutMockup17StandardsSectionMutation
   independence: PageBlocksAboutMockup17IndependenceMutation
   newsroom: PageBlocksAboutMockup17NewsroomMutation
+  publicationHeader: PageBlocksAboutMockup17PublicationHeaderMutation
+  documentSections: [PageBlocksAboutMockup17DocumentSectionsMutation]
 }
 
 input PageBlocksOurTeamMockup17HeroMutation {

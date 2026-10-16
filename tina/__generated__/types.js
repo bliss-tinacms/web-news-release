@@ -263,6 +263,35 @@ export const PagePartsFragmentDoc = gql`
           text
         }
       }
+      publicationHeader {
+        __typename
+        eyebrow
+        headline
+        description
+        facts {
+          __typename
+          label
+          value
+        }
+      }
+      documentSections {
+        __typename
+        number
+        navTitle
+        sectionLabel
+        title
+        lead
+        paragraphs {
+          __typename
+          text
+        }
+        principles {
+          __typename
+          number
+          text
+        }
+        note
+      }
     }
     ... on PageBlocksOurTeamMockup17 {
       hero {
@@ -969,7 +998,7 @@ const generateRequester = (client) => {
 export const ExperimentalGetTinaClient = () => getSdk(
   generateRequester(
     createClient({
-      url: "https://www.webnewsrelease.com/tina-content-proxy",
+      url: "http://localhost:4001/graphql",
       queries
     })
   )

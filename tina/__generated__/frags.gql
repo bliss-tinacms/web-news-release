@@ -253,6 +253,35 @@ fragment PageParts on Page {
           text
         }
       }
+      publicationHeader {
+        __typename
+        eyebrow
+        headline
+        description
+        facts {
+          __typename
+          label
+          value
+        }
+      }
+      documentSections {
+        __typename
+        number
+        navTitle
+        sectionLabel
+        title
+        lead
+        paragraphs {
+          __typename
+          text
+        }
+        principles {
+          __typename
+          number
+          text
+        }
+        note
+      }
     }
     ... on PageBlocksOurTeamMockup17 {
       hero {

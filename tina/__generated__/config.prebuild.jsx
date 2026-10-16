@@ -892,6 +892,57 @@ var aboutMockup17BlockSchema = {
           ]
         }
       ]
+    },
+    {
+      type: "object",
+      name: "publicationHeader",
+      label: "Publication Header",
+      fields: [
+        { name: "eyebrow", label: "Eyebrow", type: "string" },
+        { name: "headline", label: "Headline", type: "string" },
+        { name: "description", label: "Description", type: "string", ui: { component: "textarea" } },
+        {
+          name: "facts",
+          label: "Publication Facts",
+          type: "object",
+          list: true,
+          fields: [
+            { name: "label", label: "Label", type: "string" },
+            { name: "value", label: "Value", type: "string" }
+          ]
+        }
+      ]
+    },
+    {
+      type: "object",
+      name: "documentSections",
+      label: "About Document Sections",
+      list: true,
+      fields: [
+        { name: "number", label: "Number", type: "string" },
+        { name: "navTitle", label: "Navigation Title", type: "string" },
+        { name: "sectionLabel", label: "Section Label", type: "string" },
+        { name: "title", label: "Title", type: "string" },
+        { name: "lead", label: "Lead Paragraph", type: "string", ui: { component: "textarea" } },
+        {
+          name: "paragraphs",
+          label: "Paragraphs",
+          type: "object",
+          list: true,
+          fields: [{ name: "text", label: "Text", type: "string", ui: { component: "textarea" } }]
+        },
+        {
+          name: "principles",
+          label: "Principles",
+          type: "object",
+          list: true,
+          fields: [
+            { name: "number", label: "Number", type: "string" },
+            { name: "text", label: "Text", type: "string", ui: { component: "textarea" } }
+          ]
+        },
+        { name: "note", label: "Note", type: "string", ui: { component: "textarea" } }
+      ]
     }
   ]
 };
