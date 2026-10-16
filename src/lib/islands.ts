@@ -30,7 +30,7 @@ export const islands: IslandRegistry = {
 	page: {
 		fetch: (_request, params) => getEditablePage(params.get('slug') ?? 'home'),
 		component: PageBody,
-		wrapper: { tag: 'main' },
+		wrapper: { tag: 'div' },
 		propsFromData: (data) => ({
 			data: (data as QueryResult<PageQuery>).data?.page as CmsPage | undefined,
 		}),
