@@ -1,31 +1,7 @@
 {
-  "headerNavigation": "src/content/navigation/header.json",
-  "footerNavigation": "src/content/navigation/footer.json",
-  "seo": {
-    "title": "Web News Release",
-    "description": "Web News Release is a digital news platform publishing timely developments, practical insights, and relevant stories across business, technology, health, and public life.",
-    "siteOwner": "Elizabeth Torres",
-    "logo": "/brand-assets/mockup-31/173dc477-205f-42da-a5d3-108895360989.png",
-    "favicon": "https://res.cloudinary.com/qwdyyii2/image/upload/v1792161600/webnewsrelease/favicon.png",
-    "footerLogo": "/brand-assets/mockup-31/173dc477-205f-42da-a5d3-108895360989.png"
-  },
   "branding": {
-    "menuLabel": "Menu",
+    "menuLabel": "MENU TEST",
     "footerDescription": "A digital news platform that helps readers navigate a crowded news environment by highlighting stories with genuine informational value. Coverage across business, technology, health, lifestyle, education, travel, and culture, selected for relevance and reader interest.",
     "copyright": "© 2026 Web News Release. All rights reserved."
-  },
-  "contactForm": {
-    "formspreeEndpoint": "https://formspree.io/f/mppqkbzn",
-    "heading": "Contact us",
-    "description": "Send a message to the Web News Release editorial team.",
-    "buttonText": "Send Message",
-    "note": "We review every submission and will respond when appropriate.",
-    "subject": "Web News Release contact form submission"
-  },
-  "codeInjection": {
-    "headerCode": "",
-    "footerCode": ""
-  },
-  "contactLinks": [],
-  "footerStarfield": false
+  }
 }
