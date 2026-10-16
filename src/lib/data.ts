@@ -312,6 +312,7 @@ export async function getConfig() {
 			headerNavigation { ... on Navigation { _sys { relativePath } } }
 			footerNavigation { ... on Navigation { _sys { relativePath } } }
 			seo { title description siteOwner logo favicon footerLogo }
+			branding { menuLabel footerDescription copyright }
 			contactForm { formspreeEndpoint heading description buttonText note subject }
 			codeInjection { headerCode footerCode }
 			contactLinks { title link icon }
@@ -420,7 +421,7 @@ async function getLivePage(slug: string) {
 			blocks {
 				__typename
 				... on PageBlocksContent { body }
-				... on PageBlocksHomepageTemplate { hero { eyebrow title description buttonText buttonLink image imageAlt } why { eyebrow title paragraphOne paragraphTwo standards { label title text } } newsroom { heading subheading submitHeading submitButtonText submitButtonLink prompts { title text } } wireFeature { eyebrow quote author byline image imageAlt } coverage { title description topics { number title text } } contact { eyebrow title description note cards { title email text accent } } }
+				... on PageBlocksHomepageTemplate { hero { tag title description image imageAlt } latest { title updatedLabel items { category meta title description image imageAlt link } } mission { eyebrow title paragraphs { text bold } signature } coverage { eyebrow title items { number label title text link } } quote { eyebrow quote author byline image imageAlt } standards { eyebrow title items { tab number text } seal } team { eyebrow title members { image imageAlt name role text link } } cta { eyebrow title description points { number text } buttonText buttonLink } }
 				... on PageBlocksAboutMockup17 { hero { eyebrow headline lede } purpose { eyebrow title paragraphOne pullquote paragraphTwo } coverage { eyebrow title intro items { number title text link } } standardsSection { eyebrow title intro items { number title text } } independence { eyebrow title image imageAlt paragraphOne paragraphTwo buttonText buttonLink } newsroom { eyebrow title intro contacts { icon title email text } } }
 				... on PageBlocksOurTeamMockup17 { hero { eyebrow headline lede } leadership { eyebrow title people { name role location image imageAlt bio } } seniorStaff { eyebrow title } }
 				... on PageBlocksContactMockup17 { hero { eyebrow headline lede } formSection { eyebrow title description buttonText note formAction subject } inboxes { eyebrow title cards { title description email note } } requests { eyebrow title intro cards { icon title text } } }

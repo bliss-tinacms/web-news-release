@@ -1,120 +1,88 @@
+const text = (name: string, label: string) => ({ name, label, type: 'string' as const });
+const textarea = (name: string, label: string) => ({ name, label, type: 'string' as const, ui: { component: 'textarea' } });
+const image = (name: string, label: string) => ({ name, label, type: 'image' as const });
+
 export const homepageTemplateBlockSchema = {
   name: 'homepageTemplate',
-  label: 'Homepage Template Content',
+  label: 'Homepage — Mockup 31',
   fields: [
+    {
+      type: 'object', name: 'hero', label: 'Hero', fields: [
+        text('tag', 'Tag'), text('title', 'Headline'), textarea('description', 'Description'),
+        image('image', 'Hero Image'), text('imageAlt', 'Hero Image Alt Text'),
+      ],
+    },
+    {
+      type: 'object', name: 'latest', label: 'Latest Stories', fields: [
+        text('title', 'Section Title'), text('updatedLabel', 'Update Label'),
         {
-          type: 'object',
-          name: 'hero',
-          label: 'Hero Section',
+          type: 'object', list: true, name: 'items', label: 'Story Cards',
+          ui: { itemProps: (item: any) => ({ label: item?.title || 'Story card' }) },
           fields: [
-            { name: 'eyebrow', label: 'Eyebrow', type: 'string' },
-            { name: 'title', label: 'Headline', type: 'string' },
-            { name: 'description', label: 'Description', type: 'string', ui: { component: 'textarea' } },
-            { name: 'buttonText', label: 'Featured Story Label', type: 'string', description: 'Text label shown beside the hero eyebrow. This is not a button and does not link anywhere.' },
-            { name: 'buttonLink', label: 'Unused Legacy Link', type: 'string', description: 'Kept only for TinaCloud schema compatibility. The Featured Story label does not use this link.' },
-            { name: 'image', label: 'Hero Image', type: 'image' },
-            { name: 'imageAlt', label: 'Hero Image Alt Text', type: 'string' },
-          ],
-        },
-        {
-          type: 'object',
-          name: 'why',
-          label: 'Why / Editorial Standards Section',
-          fields: [
-            { name: 'eyebrow', label: 'Eyebrow', type: 'string' },
-            { name: 'title', label: 'Heading', type: 'string' },
-            { name: 'paragraphOne', label: 'Paragraph 1', type: 'string', ui: { component: 'textarea' } },
-            { name: 'paragraphTwo', label: 'Paragraph 2', type: 'string', ui: { component: 'textarea' } },
-            {
-              type: 'object',
-              list: true,
-              name: 'standards',
-              label: 'Standards Cards',
-              fields: [
-                { name: 'label', label: 'Small Label', type: 'string' },
-                { name: 'title', label: 'Card Title', type: 'string' },
-                { name: 'text', label: 'Card Text', type: 'string', ui: { component: 'textarea' } },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'object',
-          name: 'newsroom',
-          label: 'Latest Newsroom / Submit Panel',
-          fields: [
-            { name: 'heading', label: 'Latest News Heading', type: 'string' },
-            { name: 'subheading', label: 'Latest News Subheading', type: 'string' },
-            { name: 'submitHeading', label: 'Submit Panel Heading', type: 'string' },
-            { name: 'submitButtonText', label: 'Submit Button Text', type: 'string' },
-            { name: 'submitButtonLink', label: 'Submit Button Link', type: 'string' },
-            {
-              type: 'object',
-              list: true,
-              name: 'prompts',
-              label: 'Submit Prompt Items',
-              fields: [
-                { name: 'title', label: 'Title', type: 'string' },
-                { name: 'text', label: 'Text', type: 'string', ui: { component: 'textarea' } },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'object',
-          name: 'wireFeature',
-          label: 'From the Wire Feature',
-          fields: [
-            { name: 'eyebrow', label: 'Eyebrow', type: 'string' },
-            { name: 'quote', label: 'Quote', type: 'string', ui: { component: 'textarea' } },
-            { name: 'author', label: 'Author Name', type: 'string' },
-            { name: 'byline', label: 'Byline', type: 'string' },
-            { name: 'image', label: 'Feature Image', type: 'image' },
-            { name: 'imageAlt', label: 'Feature Image Alt Text', type: 'string' },
-          ],
-        },
-        {
-          type: 'object',
-          name: 'coverage',
-          label: 'What We Cover Section',
-          fields: [
-            { name: 'title', label: 'Heading', type: 'string' },
-            { name: 'description', label: 'Description', type: 'string', ui: { component: 'textarea' } },
-            {
-              type: 'object',
-              list: true,
-              name: 'topics',
-              label: 'Coverage Topic Cards',
-              fields: [
-                { name: 'number', label: 'Number', type: 'string' },
-                { name: 'title', label: 'Topic Title', type: 'string' },
-                { name: 'text', label: 'Topic Text', type: 'string', ui: { component: 'textarea' } },
-              ],
-            },
-          ],
-        },
-        {
-          type: 'object',
-          name: 'contact',
-          label: 'Get In Touch Section',
-          fields: [
-            { name: 'eyebrow', label: 'Eyebrow', type: 'string' },
-            { name: 'title', label: 'Heading', type: 'string' },
-            { name: 'description', label: 'Description', type: 'string', ui: { component: 'textarea' } },
-            { name: 'note', label: 'Note', type: 'string', ui: { component: 'textarea' } },
-            {
-              type: 'object',
-              list: true,
-              name: 'cards',
-              label: 'Contact Cards',
-              fields: [
-                { name: 'title', label: 'Card Title', type: 'string' },
-                { name: 'email', label: 'Email', type: 'string' },
-                { name: 'text', label: 'Card Text', type: 'string', ui: { component: 'textarea' } },
-                { name: 'accent', label: 'Accent Card', type: 'boolean' },
-              ],
-            },
+            text('category', 'Category'), text('meta', 'Secondary Label'), text('title', 'Headline'),
+            textarea('description', 'Summary'), image('image', 'Image'), text('imageAlt', 'Image Alt Text'), text('link', 'Link URL'),
           ],
         },
       ],
+    },
+    {
+      type: 'object', name: 'mission', label: 'Our Purpose', fields: [
+        text('eyebrow', 'Eyebrow'), text('title', 'Statement'),
+        {
+          type: 'object', list: true, name: 'paragraphs', label: 'Paragraphs',
+          ui: { itemProps: (item: any) => ({ label: item?.text?.slice(0, 48) || 'Paragraph' }) },
+          fields: [textarea('text', 'Text'), { name: 'bold', label: 'Bold Paragraph', type: 'boolean' }],
+        },
+        text('signature', 'Signature'),
+      ],
+    },
+    {
+      type: 'object', name: 'coverage', label: 'Coverage Areas', fields: [
+        text('eyebrow', 'Eyebrow'), text('title', 'Heading'),
+        {
+          type: 'object', list: true, name: 'items', label: 'Coverage Cards',
+          ui: { itemProps: (item: any) => ({ label: item?.title || 'Coverage card' }) },
+          fields: [text('number', 'Number'), text('label', 'Short Label'), text('title', 'Title'), textarea('text', 'Description'), text('link', 'Link URL')],
+        },
+      ],
+    },
+    {
+      type: 'object', name: 'quote', label: 'Editorial Quote', fields: [
+        text('eyebrow', 'Eyebrow'), textarea('quote', 'Quote'), text('author', 'Author'), text('byline', 'Byline'),
+        image('image', 'Image'), text('imageAlt', 'Image Alt Text'),
+      ],
+    },
+    {
+      type: 'object', name: 'standards', label: 'Editorial Standards', fields: [
+        text('eyebrow', 'Eyebrow'), text('title', 'Heading'),
+        {
+          type: 'object', list: true, name: 'items', label: 'Standards',
+          ui: { itemProps: (item: any) => ({ label: item?.tab || 'Standard' }) },
+          fields: [text('tab', 'Tab Label'), text('number', 'Number'), textarea('text', 'Description')],
+        },
+        text('seal', 'Closing Line'),
+      ],
+    },
+    {
+      type: 'object', name: 'team', label: 'Newsroom Team', fields: [
+        text('eyebrow', 'Eyebrow'), text('title', 'Heading'),
+        {
+          type: 'object', list: true, name: 'members', label: 'Team Members',
+          ui: { itemProps: (item: any) => ({ label: item?.name || 'Team member' }) },
+          fields: [image('image', 'Photo'), text('imageAlt', 'Photo Alt Text'), text('name', 'Name'), text('role', 'Role and Location'), textarea('text', 'Description'), text('link', 'Profile Link URL')],
+        },
+      ],
+    },
+    {
+      type: 'object', name: 'cta', label: 'Write For Us', fields: [
+        text('eyebrow', 'Eyebrow'), text('title', 'Heading'), textarea('description', 'Description'),
+        {
+          type: 'object', list: true, name: 'points', label: 'Pitch Instructions',
+          ui: { itemProps: (item: any) => ({ label: item?.text || 'Instruction' }) },
+          fields: [text('number', 'Number'), text('text', 'Instruction')],
+        },
+        text('buttonText', 'Button Text'), text('buttonLink', 'Button Link URL'),
+      ],
+    },
+  ],
 };

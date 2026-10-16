@@ -1,10 +1,11 @@
 ---
-import { tinaField } from "@tinacms/astro/tina-field";
+import { tinaField } from '@tinacms/astro/tina-field';
 import { getFooterNavigation, type CmsConfig } from '../lib/data';
 
 type NavItem = {
   label?: string | null;
   href?: string | null;
+  children?: (NavItem | null)[] | null;
 };
 
 type NavigationDocument = {
@@ -20,54 +21,29 @@ interface Props {
 const { config } = Astro.props;
 let { navigation } = Astro.props;
 if (!navigation && config) navigation = (await getFooterNavigation(config)).data?.navigation ?? null;
-const currentYear = new Date().getFullYear();
 const seo = config?.seo ?? null;
-const siteTitle = seo?.title || 'Web News Release';
-// Footer Logo must drive the footer when set; fall back to the main Logo and
-// then to the configured site title so a migrated site never inherits a logo.
+const branding = (config as any)?.branding ?? null;
+const siteTitle = seo?.title || '';
 const footerLogo = seo?.footerLogo || seo?.logo || '';
-const footerMenuItems = ((navigation?.items ?? []) as NavItem[]).filter((item) => item && item.label && item.href);
-const fineLinks = [
-  { label: 'Privacy', href: '/privacy-policy/' },
-  { label: 'Terms', href: '/terms-of-use/' },
-  { label: 'Cookie', href: '/cookie-policy/' },
-  { label: 'AI', href: '/ai-policy/' },
-  { label: 'DMCA', href: '/dmca-policy/' },
-  { label: 'Sponsored', href: '/sponsored-content-policy/' },
-  { label: 'Sitemap', href: '/sitemap/' },
-];
+const footerDescription = branding?.footerDescription || '';
+const copyright = branding?.copyright || '';
+const footerColumns = ((navigation?.items ?? []) as NavItem[]).filter((item) => item?.label && item?.children?.length);
 ---
 
 <footer class="ft" data-brand-footer>
-  <div class="ft-band">
-    <div class="w">
-      <div class="ft-band-in">
-        <p>Timely stories, useful insights, and clear coverage of the topics that matter.</p>
+  <div class="w"><div class="ft-t">
+    {footerLogo
+      ? <img src={footerLogo} alt={siteTitle} data-tina-field={seo ? tinaField(seo, 'footerLogo') : undefined} loading="lazy" decoding="async" />
+      : <a href="/" aria-label={`${siteTitle} home`}>{siteTitle}</a>}
+    <p data-tina-field={branding ? tinaField(branding, 'footerDescription') : undefined}>{footerDescription}</p>
+  </div></div>
+  <div class="w"><div class="ft-g">
+    {footerColumns.map((column) => (
+      <div class="ft-c">
+        <h4 data-tina-field={tinaField(column, 'label')}>{column.label}</h4>
+        <ul>{(column.children ?? []).filter((item): item is NavItem => Boolean(item?.label && item?.href)).map((item) => <li><a href={item.href || '#'} data-tina-field={tinaField(item, 'label')}>{item.label}</a></li>)}</ul>
       </div>
-    </div>
-  </div>
-  <div class="w">
-    <div class="ft-cl">
-      {footerLogo ? (
-        <img src={footerLogo} alt={siteTitle} data-tina-field={seo ? tinaField(seo, 'footerLogo') : undefined} loading="lazy" decoding="async" />
-      ) : (
-        <a class="ft-wordmark" href="/" aria-label={`${siteTitle} home`}>{siteTitle}</a>
-      )}
-      <nav class="ft-links" aria-label={navigation?.title || 'Footer menu'}>
-        {footerMenuItems.map((item) => (
-          <a href={item.href || '#'} data-tina-field={tinaField(item, 'label')}>{item.label}</a>
-        ))}
-      </nav>
-    </div>
-  </div>
-  <div class="w">
-    <div class="ft-lg">
-      <p>&copy; {currentYear} {siteTitle}. All rights reserved.</p>
-      <nav class="ft-fine" aria-label="Footer legal links">
-        {fineLinks.map((item) => (
-          <a href={item.href}>{item.label}</a>
-        ))}
-      </nav>
-    </div>
-  </div>
+    ))}
+  </div></div>
+  <div class="w"><div class="ft-b"><p data-tina-field={branding ? tinaField(branding, 'copyright') : undefined}>{copyright}</p></div></div>
 </footer>

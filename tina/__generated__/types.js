@@ -105,41 +105,52 @@ export const PagePartsFragmentDoc = gql`
     ... on PageBlocksHomepageTemplate {
       hero {
         __typename
-        eyebrow
+        tag
         title
         description
-        buttonText
-        buttonLink
         image
         imageAlt
       }
-      why {
+      latest {
+        __typename
+        title
+        updatedLabel
+        items {
+          __typename
+          category
+          meta
+          title
+          description
+          image
+          imageAlt
+          link
+        }
+      }
+      mission {
         __typename
         eyebrow
         title
-        paragraphOne
-        paragraphTwo
-        standards {
+        paragraphs {
           __typename
+          text
+          bold
+        }
+        signature
+      }
+      coverage {
+        __typename
+        eyebrow
+        title
+        items {
+          __typename
+          number
           label
           title
           text
+          link
         }
       }
-      newsroom {
-        __typename
-        heading
-        subheading
-        submitHeading
-        submitButtonText
-        submitButtonLink
-        prompts {
-          __typename
-          title
-          text
-        }
-      }
-      wireFeature {
+      quote {
         __typename
         eyebrow
         quote
@@ -148,30 +159,44 @@ export const PagePartsFragmentDoc = gql`
         image
         imageAlt
       }
-      coverage {
+      standards {
         __typename
+        eyebrow
         title
-        description
-        topics {
+        items {
           __typename
+          tab
           number
-          title
           text
         }
+        seal
       }
-      contact {
+      team {
+        __typename
+        eyebrow
+        title
+        members {
+          __typename
+          image
+          imageAlt
+          name
+          role
+          text
+          link
+        }
+      }
+      cta {
         __typename
         eyebrow
         title
         description
-        note
-        cards {
+        points {
           __typename
-          title
-          email
+          number
           text
-          accent
         }
+        buttonText
+        buttonLink
       }
     }
     ... on PageBlocksAboutMockup17 {
@@ -512,6 +537,12 @@ export const ConfigPartsFragmentDoc = gql`
     logo
     favicon
     footerLogo
+  }
+  branding {
+    __typename
+    menuLabel
+    footerDescription
+    copyright
   }
   contactForm {
     __typename
@@ -938,7 +969,7 @@ const generateRequester = (client) => {
 export const ExperimentalGetTinaClient = () => getSdk(
   generateRequester(
     createClient({
-      url: "http://localhost:4001/graphql",
+      url: "https://www.webnewsrelease.com/tina-content-proxy",
       queries
     })
   )

@@ -58,6 +58,16 @@ export const GlobalConfigCollection: Collection = {
       ],
     },
     {
+      name: "branding",
+      label: "Global Header & Footer",
+      type: "object",
+      fields: [
+        { name: "menuLabel", label: "Mobile Menu Label", type: "string" },
+        { name: "footerDescription", label: "Footer Description", type: "string", ui: { component: "textarea" } },
+        { name: "copyright", label: "Copyright Line", type: "string" },
+      ],
+    },
+    {
       name: "contactForm",
       label: "Contact Form",
       type: "object",

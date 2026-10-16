@@ -2,24 +2,41 @@
   "title": "Footer Menu",
   "items": [
     {
-      "label": "Home",
-      "href": "/"
+      "label": "Coverage",
+      "href": "/blog/",
+      "children": [
+        { "label": "Current Events", "href": "/featured/" },
+        { "label": "Business", "href": "/business/" },
+        { "label": "Science", "href": "/health/" },
+        { "label": "Health", "href": "/health/" },
+        { "label": "Travel", "href": "/lifestyle/" },
+        { "label": "Home & Living", "href": "/lifestyle/" },
+        { "label": "Technology", "href": "/technology/" }
+      ]
     },
     {
-      "label": "About Us",
-      "href": "/about/"
+      "label": "The publication",
+      "href": "/about/",
+      "children": [
+        { "label": "About Us", "href": "/about/" },
+        { "label": "Our Team", "href": "/our-team/" },
+        { "label": "Editorial Guidelines", "href": "/editorial-guidelines/" },
+        { "label": "Contact Us", "href": "/contact/" },
+        { "label": "Write For Us", "href": "/write-for-us/" },
+        { "label": "Sitemap", "href": "/sitemap/" }
+      ]
     },
     {
-      "label": "Our Team",
-      "href": "/our-team/"
-    },
-    {
-      "label": "Contact Us",
-      "href": "/contact/"
-    },
-    {
-      "label": "Blog",
-      "href": "/blog/"
+      "label": "Policies",
+      "href": "/privacy-policy/",
+      "children": [
+        { "label": "Privacy Policy", "href": "/privacy-policy/" },
+        { "label": "Terms of Use", "href": "/terms-of-use/" },
+        { "label": "Cookie Policy", "href": "/cookie-policy/" },
+        { "label": "AI Policy", "href": "/ai-policy/" },
+        { "label": "DMCA Policy", "href": "/dmca-policy/" },
+        { "label": "Sponsored Content", "href": "/sponsored-content-policy/" }
+      ]
     }
   ]
 }
