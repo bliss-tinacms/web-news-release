@@ -19,8 +19,10 @@ function getBranch() {
 }
 
 function configuredOrigins() {
-  return env('TINA_ALLOWED_ORIGINS', 'ALLOWED_ORIGINS')
-    .split(',')
+  return [
+    ...env('TINA_ALLOWED_ORIGINS', 'ALLOWED_ORIGINS').split(','),
+    env('SITE_URL'),
+  ]
     .map((origin) => origin.trim().replace(/\/$/, ''))
     .filter(Boolean);
 }
