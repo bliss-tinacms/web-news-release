@@ -1,0 +1,26 @@
+{
+  "headerNavigation": "src/content/navigation/header.json",
+  "footerNavigation": "src/content/navigation/footer.json",
+  "seo": {
+    "title": "Web News Release",
+    "description": "Independent news, analysis, and public-interest reporting.",
+    "siteOwner": "Elizabeth Torres",
+    "logo": "",
+    "favicon": "/favicon.svg",
+    "footerLogo": ""
+  },
+  "contactForm": {
+    "formspreeEndpoint": "https://formspree.io/f/mppqkbzn",
+    "heading": "Contact us",
+    "description": "Send a message to the Web News Release editorial team.",
+    "buttonText": "Send Message",
+    "note": "We review every submission and will respond when appropriate.",
+    "subject": "Web News Release contact form submission"
+  },
+  "codeInjection": {
+    "headerCode": "",
+    "footerCode": ""
+  },
+  "contactLinks": [],
+  "footerStarfield": false
+}
