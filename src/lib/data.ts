@@ -328,16 +328,21 @@ export async function getConfig() {
 	return requestWithMetadata(client.queries.config({ relativePath: 'config.json' }));
 }
 
-export const getEditableConfig = () => {
-	const localConfig = readLocalJson('config', 'config.json');
+export const getEditableConfig = async () => {
+	const relativePath = 'config.json';
+	const live = await fetchLiveTinaResult<{ config: any }>(ConfigDocument, { relativePath });
+	if (live?.data?.config) {
+		return requestWithMetadata(Promise.resolve(live));
+	}
+	const localConfig = readLocalJson('config', relativePath);
 	if (localConfig) {
 		return requestWithMetadata(Promise.resolve({
 			data: { config: localConfig as any },
 			query: ConfigDocument,
-			variables: { relativePath: 'config.json' },
-		}), { priority: 'primary' });
+			variables: { relativePath },
+		}));
 	}
-	return requestWithMetadata(client.queries.config({ relativePath: 'config.json' }), { priority: 'primary' });
+	return requestWithMetadata(client.queries.config({ relativePath }));
 };
 
 
@@ -387,11 +392,14 @@ export const getFooterNavigation = (config?: any) => getLiveNavigation(navigatio
 export const getPage = (slug: string) =>
 	requestWithMetadata(client.queries.page({ relativePath: `${slug}.mdx` }), { priority: 'primary' });
 
-export const getEditablePage = (slug: string) => {
+export const getEditablePage = async (slug: string) => {
 	const relativePath = slug.endsWith('.mdx') ? slug : `${slug}.mdx`;
-	// Editor/sidebar data MUST come from the generated Tina client query so
-	// requestWithMetadata can attach the form/schema metadata. Do not use
-	// public/live/local fallbacks here; those are for public rendering only.
+	// Editor/sidebar data must carry the exact generated Tina query metadata.
+	// Prefer live Tina data; local content is an outage fallback only.
+	const live = await fetchLiveTinaResult<{ page: any }>(PageDocument, { relativePath });
+	if (live?.data?.page) {
+		return requestWithMetadata(Promise.resolve(live), { priority: 'primary' });
+	}
 	const localPage = readLocalPageFrontmatter(relativePath);
 	if (localPage) {
 		return requestWithMetadata(Promise.resolve({
@@ -455,19 +463,23 @@ export const getPublicPage = (slug: string) => getLivePage(slug);
 
 export const getEditableBlog = async (slug: string) => {
 	const relativePath = slug.endsWith('.mdx') ? slug : `${slug}.mdx`;
-	// Preserve Tina's generated query, variables, reference objects, and rich-text body.
-	// Never synthesize or partially override editable documents.
+	// Preserve Tina's exact generated query, variables, reference objects, and rich-text body.
+	// The Passenger server must query Tina Cloud directly instead of self-fetching its public proxy.
+	const live = await fetchLiveTinaResult<{ blog: any }>(BlogDocument, { relativePath });
+	if (live?.data?.blog) {
+		return requestWithMetadata(Promise.resolve(live), { priority: 'primary' });
+	}
+	const localBlog = readLocalBlogFrontmatter(relativePath);
+	if (localBlog) {
+		return requestWithMetadata(Promise.resolve({
+			data: { blog: localBlog as any },
+			query: BlogDocument,
+			variables: { relativePath },
+		}), { priority: 'primary' });
+	}
 	try {
-		return requestWithMetadata(client.queries.blog({ relativePath }), { priority: 'primary' });
+		return await requestWithMetadata(client.queries.blog({ relativePath }), { priority: 'primary' });
 	} catch (_error) {
-		const live = await fetchLiveTinaResult<{ blog: any }>(BlogDocument, { relativePath });
-		if (live?.data?.blog) {
-			return requestWithMetadata(Promise.resolve({
-				data: live.data,
-				query: BlogDocument,
-				variables: { relativePath },
-			}), { priority: 'primary' });
-		}
 		throw _error;
 	}
 };
@@ -521,8 +533,12 @@ async function getLiveUser(slug: string) {
 	return requestWithMetadata(client.queries.user({ relativePath }));
 }
 
-export const getEditableUser = (slug: string) => {
+export const getEditableUser = async (slug: string) => {
 	const relativePath = slug.endsWith('.json') ? slug : `${slug}.json`;
+	const live = await fetchLiveTinaResult<{ user: any }>(UserDocument, { relativePath });
+	if (live?.data?.user) {
+		return requestWithMetadata(Promise.resolve(live), { priority: 'primary' });
+	}
 	const localUser = readLocalJson('user', relativePath);
 	if (localUser) {
 		return requestWithMetadata(Promise.resolve({
@@ -536,8 +552,12 @@ export const getEditableUser = (slug: string) => {
 
 export const getUser = (slug: string) => getLiveUser(slug);
 
-export const getEditableCategory = (slug: string) => {
+export const getEditableCategory = async (slug: string) => {
 	const relativePath = slug.endsWith('.json') ? slug : `${slug}.json`;
+	const live = await fetchLiveTinaResult<{ category: any }>(CategoryDocument, { relativePath });
+	if (live?.data?.category) {
+		return requestWithMetadata(Promise.resolve(live), { priority: 'primary' });
+	}
 	const localCategory = readLocalJson('category', relativePath);
 	if (localCategory) {
 		return requestWithMetadata(Promise.resolve({

@@ -1,6 +1,15 @@
 import { readFileSync, existsSync } from 'node:fs';
+import { dirname, isAbsolute, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-for (const envFile of ['.env', process.env.SITE_ENV_FILE].filter(Boolean)) {
+const appRoot = dirname(fileURLToPath(import.meta.url));
+process.env.PASSENGER_APP_ROOT ||= appRoot;
+
+const configuredEnvFile = process.env.SITE_ENV_FILE
+  ? (isAbsolute(process.env.SITE_ENV_FILE) ? process.env.SITE_ENV_FILE : join(appRoot, process.env.SITE_ENV_FILE))
+  : null;
+
+for (const envFile of [join(appRoot, '.env'), configuredEnvFile].filter(Boolean)) {
   if (!existsSync(envFile)) continue;
   const content = readFileSync(envFile, 'utf8');
   for (const rawLine of content.split(/\r?\n/)) {

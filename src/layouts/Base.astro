@@ -1,8 +1,10 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
 import Header from '../templates/Header.astro';
 import Footer from '../templates/Footer.astro';
 import { getConfig, getHeaderNavigation, getFooterNavigation } from '../lib/data';
+import { islands } from '../lib/islands';
 
 interface Props {
 	title: string;
@@ -45,9 +47,13 @@ const defaultSocialImage = config?.seo?.defaultSocialImage || undefined;
 	</head>
 	<body>
 		<div class="tr"></div>
-		<Header config={config} navigation={headerNavigation} />
+		<TinaIsland name="global" wrapper={islands.global.wrapper}>
+			<Header config={config} navigation={headerNavigation} />
+		</TinaIsland>
 		<slot />
-		<Footer config={config} navigation={footerNavigation} />
+		<TinaIsland name="global-footer" wrapper={islands['global-footer'].wrapper}>
+			<Footer config={config} navigation={footerNavigation} />
+		</TinaIsland>
 		{footerCode && <Fragment set:html={footerCode} />}
 	</body>
 </html>

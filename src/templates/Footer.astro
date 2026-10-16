@@ -1,6 +1,6 @@
 ---
 import { tinaField } from "@tinacms/astro/tina-field";
-import type { CmsConfig } from '../lib/data';
+import { getFooterNavigation, type CmsConfig } from '../lib/data';
 
 type NavItem = {
   label?: string | null;
@@ -17,7 +17,9 @@ interface Props {
   navigation?: NavigationDocument | null;
 }
 
-const { config, navigation } = Astro.props;
+const { config } = Astro.props;
+let { navigation } = Astro.props;
+if (!navigation && config) navigation = (await getFooterNavigation(config)).data?.navigation ?? null;
 const currentYear = new Date().getFullYear();
 const seo = config?.seo ?? null;
 const siteTitle = seo?.title || 'Web News Release';

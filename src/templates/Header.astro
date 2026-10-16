@@ -1,6 +1,6 @@
 ---
 import { tinaField } from "@tinacms/astro/tina-field";
-import type { CmsConfig } from '../lib/data';
+import { getHeaderNavigation, type CmsConfig } from '../lib/data';
 
 interface Props {
   config?: CmsConfig | null;
@@ -18,7 +18,9 @@ type NavigationDocument = {
   items?: (NavItem | null)[] | null;
 };
 
-const { config, navigation } = Astro.props;
+const { config } = Astro.props;
+let { navigation } = Astro.props;
+if (!navigation && config) navigation = (await getHeaderNavigation(config)).data?.navigation ?? null;
 const seo = config?.seo ?? null;
 const siteTitle = seo?.title || 'Web News Release';
 const logo = seo?.logo || '';
