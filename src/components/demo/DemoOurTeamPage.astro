@@ -1,55 +1,51 @@
 ---
 import { tinaField } from '@tinacms/astro/tina-field';
-
-const { data = null } = Astro.props;
-const block = Array.isArray(data?.blocks) ? data.blocks[0] : data;
+const { data } = Astro.props;
+const block = Array.isArray(data?.blocks) ? data.blocks.find((item: any) => item?._template === 'ourTeamMockup17' || item?.__typename === 'PageBlocksOurTeamMockup17') : null;
 const hero = block?.hero || {};
-const leadership = block?.leadership || {};
-const seniorStaff = block?.seniorStaff || {};
-const people = Array.isArray(leadership?.people) && leadership.people.length ? leadership.people : [
-  { name: 'Site Editor', role: 'Editor', location: 'Remote', image: '/placeholder.jpg', imageAlt: 'Placeholder portrait for the site editor', bio: 'Replace this sample profile with the real editor’s biography, role, location, and photo.', experience: 'Sample profile', focus: 'Replace before launch' },
-];
-const t = (value: unknown, fallback: string) => String(value || fallback);
+const leaders = Array.isArray(block?.leadership?.people) ? block.leadership.people : [];
+const staff = Array.isArray(block?.seniorStaff?.people) ? block.seniorStaff.people : [];
+function archiveUrl(person: any) { return person?.authorSlug ? `/author/${String(person.authorSlug).replace(/^\/+|\/+$/g, '')}/` : '#'; }
 ---
 
-<main class="ffn-demo ffn-demo-team">
-  <header class="ph"><div class="w"><div class="ph-in">
-    <div class="ph-k"><b data-tina-field={hero ? tinaField(hero, 'eyebrow') : undefined}>{t(hero.eyebrow, 'Our Team')}</b></div>
-    <h1 data-tina-field={hero ? tinaField(hero, 'headline') : undefined}>{t(hero.headline, 'The editors behind the coverage.')}</h1>
-    <p class="ph-d" data-tina-field={hero ? tinaField(hero, 'lede') : undefined}>{t(hero.lede, 'Replace these sample profiles with the people responsible for this site.')}</p>
-  </div></div></header>
-
-  <section class="sc"><div class="w">
-    <div class="eye"><i></i><span data-tina-field={leadership ? tinaField(leadership, 'eyebrow') : undefined}>{t(leadership.eyebrow, 'Editorial leadership')}</span></div>
-    <h2 class="h2" data-tina-field={leadership ? tinaField(leadership, 'title') : undefined}>{t(leadership.title, 'Who runs the newsroom')}</h2>
-    <div class="rs">
-      {people.map((person: any) => (
-        <article class="rsi">
-          {person.image ? <img class="rsi-img" src={person.image} alt={person.imageAlt || person.name || ''} data-tina-field={tinaField(person, 'image')} /> : <div class="rsi-img demo-img"></div>}
-          <div>
-            <div class="rsi-hd">
-              <div class="rsi-n" data-tina-field={tinaField(person, 'name')}>{person.name}</div>
-              <div class="rsi-r" data-tina-field={tinaField(person, 'role')}>{person.role}</div>
-            </div>
-            <p class="rsi-x" data-tina-field={tinaField(person, 'bio')}>{person.bio}</p>
-            <div class="rsi-f"><span data-tina-field={tinaField(person, 'location')}>{person.location}</span><span>{person.experience || 'Editorial desk'}</span><span>{person.focus || 'Daily coverage'}</span></div>
-          </div>
-        </article>
-      ))}
+<main class="mockup31-team">
+  <header class="ph">
+    <div class="ph-l">
+      <div class="ph-k" data-tina-field={hero ? tinaField(hero, 'eyebrow') : undefined}>{hero.eyebrow}</div>
+      <h1 data-tina-field={hero ? tinaField(hero, 'headline') : undefined}>{hero.headline}</h1>
+      <p class="ph-d" data-tina-field={hero ? tinaField(hero, 'lede') : undefined}>{hero.lede}</p>
+    </div>
+    <div class="ph-r">
+      {leaders[0] && <div class="ph-row"><span class="ph-rk">{leaders[0].role || 'Publisher'}</span><span class="ph-rv">{leaders[0].name}</span></div>}
+      {leaders[1] && <div class="ph-row"><span class="ph-rk">{leaders[1].role || 'Editor-in-Chief'}</span><span class="ph-rv">{leaders[1].name}</span></div>}
+      <div class="ph-row"><span class="ph-rk">Senior editors</span><span class="ph-rv">{staff.length}</span></div>
+    </div>
+  </header>
+  <section class="lead-b"><div class="w">
+    <div class="eye"><i></i><span data-tina-field={block?.leadership ? tinaField(block.leadership, 'eyebrow') : undefined}>{block?.leadership?.eyebrow}</span></div>
+    <div class="lead-in">
+      {leaders.map((person: any, index: number) => <div class="lp" data-tina-field={tinaField(block.leadership.people, index)}>
+        {person.image && <img class="lp-img" src={person.image} alt={person.imageAlt || person.name || ''} />}
+        <div class="lp-b">
+          <div class="lp-rank"><b>{String(index + 1).padStart(2, '0')}</b><i></i><span>{person.tagline}</span></div>
+          <div class="lp-n">{person.name}</div>
+          <div class="lp-r">{[person.role, person.location].filter(Boolean).join(' · ')}</div>
+          <p class="lp-x">{person.bio}</p>
+        </div>
+        <div class="lp-f">
+          <h4>{person.recordTitle || 'On the record'}</h4>
+          {(Array.isArray(person.records) ? person.records : []).map((record: any) => <div class="lp-fr"><span class="lp-fk">{record.label}</span><span class="lp-fv">{record.value}</span></div>)}
+        </div>
+      </div>)}
     </div>
   </div></section>
-
-  {Array.isArray(seniorStaff?.people) && seniorStaff.people.length > 0 && (
-    <section class="sc alt"><div class="w">
-      <div class="eye"><i></i><span data-tina-field={tinaField(seniorStaff, 'eyebrow')}>{t(seniorStaff.eyebrow, 'Senior staff')}</span></div>
-      <h2 class="h2" data-tina-field={tinaField(seniorStaff, 'title')}>{t(seniorStaff.title, 'More editors')}</h2>
-      <div class="rs">{seniorStaff.people.map((person: any) => <article class="rsi"><div><div class="rsi-hd"><div class="rsi-n" data-tina-field={tinaField(person, 'name')}>{person.name}</div><div class="rsi-r" data-tina-field={tinaField(person, 'role')}>{person.role}</div></div><p class="rsi-x" data-tina-field={tinaField(person, 'bio')}>{person.bio}</p></div></article>)}</div>
-    </div></section>
-  )}
-
-  <section class="cl"><div class="w"><div class="cl-in">
-    <h2>Found an error? Tell an editor.</h2>
-    <p>Corrections and reader concerns are handled by the editorial team responsible for the published coverage.</p>
-    <a class="cl-cta" href="/contact/">Contact Us →</a>
-  </div></div></section>
+  <section class="desk"><div class="w">
+    <div class="desk-h"><div><div class="eye"><i></i><span data-tina-field={block?.seniorStaff ? tinaField(block.seniorStaff, 'eyebrow') : undefined}>{block?.seniorStaff?.eyebrow}</span></div><div class="h2" data-tina-field={block?.seniorStaff ? tinaField(block.seniorStaff, 'title') : undefined}>{block?.seniorStaff?.title}</div></div></div>
+    {staff.map((person: any, index: number) => <a href={archiveUrl(person)} class="dr" data-tina-field={tinaField(block.seniorStaff.people, index)}>
+      <div class="dr-n">{String(leaders.length + index + 1).padStart(2, '0')}</div>
+      {person.image && <img class="dr-img" src={person.image} alt={person.imageAlt || person.name || ''} />}
+      <div><div class="dr-nm">{person.name}</div><div class="dr-r">{[person.role, person.location].filter(Boolean).join(' · ')}</div></div>
+      <p class="dr-x">{person.bio}</p>
+    </a>)}
+  </div></section>
 </main>

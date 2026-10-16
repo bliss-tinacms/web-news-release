@@ -282,6 +282,9 @@ export type Blog = Node & Document & {
   heroImage?: Maybe<Scalars['String']['output']>;
   authorAlt?: Maybe<Scalars['String']['output']>;
   heroImageAlt?: Maybe<Scalars['String']['output']>;
+  heroImageCaption?: Maybe<Scalars['String']['output']>;
+  correctionDate?: Maybe<Scalars['String']['output']>;
+  correctionText?: Maybe<Scalars['String']['output']>;
   body?: Maybe<Scalars['JSON']['output']>;
   id: Scalars['ID']['output'];
   _sys: SystemInfo;
@@ -351,6 +354,9 @@ export type BlogFilter = {
   heroImage?: InputMaybe<ImageFilter>;
   authorAlt?: InputMaybe<StringFilter>;
   heroImageAlt?: InputMaybe<StringFilter>;
+  heroImageCaption?: InputMaybe<StringFilter>;
+  correctionDate?: InputMaybe<DatetimeFilter>;
+  correctionText?: InputMaybe<StringFilter>;
   body?: InputMaybe<BlogBodyFilter>;
 };
 
@@ -689,6 +695,12 @@ export type PageBlocksOurTeamMockup17Hero = {
   lede?: Maybe<Scalars['String']['output']>;
 };
 
+export type PageBlocksOurTeamMockup17LeadershipPeopleRecords = {
+  __typename?: 'PageBlocksOurTeamMockup17LeadershipPeopleRecords';
+  label?: Maybe<Scalars['String']['output']>;
+  value?: Maybe<Scalars['String']['output']>;
+};
+
 export type PageBlocksOurTeamMockup17LeadershipPeople = {
   __typename?: 'PageBlocksOurTeamMockup17LeadershipPeople';
   name?: Maybe<Scalars['String']['output']>;
@@ -697,6 +709,10 @@ export type PageBlocksOurTeamMockup17LeadershipPeople = {
   image?: Maybe<Scalars['String']['output']>;
   imageAlt?: Maybe<Scalars['String']['output']>;
   bio?: Maybe<Scalars['String']['output']>;
+  tagline?: Maybe<Scalars['String']['output']>;
+  recordTitle?: Maybe<Scalars['String']['output']>;
+  authorSlug?: Maybe<Scalars['String']['output']>;
+  records?: Maybe<Array<Maybe<PageBlocksOurTeamMockup17LeadershipPeopleRecords>>>;
 };
 
 export type PageBlocksOurTeamMockup17Leadership = {
@@ -714,6 +730,7 @@ export type PageBlocksOurTeamMockup17SeniorStaffPeople = {
   image?: Maybe<Scalars['String']['output']>;
   imageAlt?: Maybe<Scalars['String']['output']>;
   bio?: Maybe<Scalars['String']['output']>;
+  authorSlug?: Maybe<Scalars['String']['output']>;
 };
 
 export type PageBlocksOurTeamMockup17SeniorStaff = {
@@ -735,6 +752,9 @@ export type PageBlocksContactMockup17Hero = {
   eyebrow?: Maybe<Scalars['String']['output']>;
   headline?: Maybe<Scalars['String']['output']>;
   lede?: Maybe<Scalars['String']['output']>;
+  newsroomEmail?: Maybe<Scalars['String']['output']>;
+  generalEmail?: Maybe<Scalars['String']['output']>;
+  replyTime?: Maybe<Scalars['String']['output']>;
 };
 
 export type PageBlocksContactMockup17FormSection = {
@@ -744,6 +764,9 @@ export type PageBlocksContactMockup17FormSection = {
   description?: Maybe<Scalars['String']['output']>;
   buttonText?: Maybe<Scalars['String']['output']>;
   note?: Maybe<Scalars['String']['output']>;
+  goesTo?: Maybe<Scalars['String']['output']>;
+  readBy?: Maybe<Scalars['String']['output']>;
+  replyWindow?: Maybe<Scalars['String']['output']>;
   formAction?: Maybe<Scalars['String']['output']>;
   subject?: Maybe<Scalars['String']['output']>;
 };
@@ -1159,6 +1182,11 @@ export type PageBlocksOurTeamMockup17HeroFilter = {
   lede?: InputMaybe<StringFilter>;
 };
 
+export type PageBlocksOurTeamMockup17LeadershipPeopleRecordsFilter = {
+  label?: InputMaybe<StringFilter>;
+  value?: InputMaybe<StringFilter>;
+};
+
 export type PageBlocksOurTeamMockup17LeadershipPeopleFilter = {
   name?: InputMaybe<StringFilter>;
   role?: InputMaybe<StringFilter>;
@@ -1166,6 +1194,10 @@ export type PageBlocksOurTeamMockup17LeadershipPeopleFilter = {
   image?: InputMaybe<ImageFilter>;
   imageAlt?: InputMaybe<StringFilter>;
   bio?: InputMaybe<StringFilter>;
+  tagline?: InputMaybe<StringFilter>;
+  recordTitle?: InputMaybe<StringFilter>;
+  authorSlug?: InputMaybe<StringFilter>;
+  records?: InputMaybe<PageBlocksOurTeamMockup17LeadershipPeopleRecordsFilter>;
 };
 
 export type PageBlocksOurTeamMockup17LeadershipFilter = {
@@ -1181,6 +1213,7 @@ export type PageBlocksOurTeamMockup17SeniorStaffPeopleFilter = {
   image?: InputMaybe<ImageFilter>;
   imageAlt?: InputMaybe<StringFilter>;
   bio?: InputMaybe<StringFilter>;
+  authorSlug?: InputMaybe<StringFilter>;
 };
 
 export type PageBlocksOurTeamMockup17SeniorStaffFilter = {
@@ -1199,6 +1232,9 @@ export type PageBlocksContactMockup17HeroFilter = {
   eyebrow?: InputMaybe<StringFilter>;
   headline?: InputMaybe<StringFilter>;
   lede?: InputMaybe<StringFilter>;
+  newsroomEmail?: InputMaybe<StringFilter>;
+  generalEmail?: InputMaybe<StringFilter>;
+  replyTime?: InputMaybe<StringFilter>;
 };
 
 export type PageBlocksContactMockup17FormSectionFilter = {
@@ -1207,6 +1243,9 @@ export type PageBlocksContactMockup17FormSectionFilter = {
   description?: InputMaybe<StringFilter>;
   buttonText?: InputMaybe<StringFilter>;
   note?: InputMaybe<StringFilter>;
+  goesTo?: InputMaybe<StringFilter>;
+  readBy?: InputMaybe<StringFilter>;
+  replyWindow?: InputMaybe<StringFilter>;
   formAction?: InputMaybe<StringFilter>;
   subject?: InputMaybe<StringFilter>;
 };
@@ -1797,6 +1836,9 @@ export type BlogMutation = {
   heroImage?: InputMaybe<Scalars['String']['input']>;
   authorAlt?: InputMaybe<Scalars['String']['input']>;
   heroImageAlt?: InputMaybe<Scalars['String']['input']>;
+  heroImageCaption?: InputMaybe<Scalars['String']['input']>;
+  correctionDate?: InputMaybe<Scalars['String']['input']>;
+  correctionText?: InputMaybe<Scalars['String']['input']>;
   body?: InputMaybe<Scalars['JSON']['input']>;
 };
 
@@ -2055,6 +2097,11 @@ export type PageBlocksOurTeamMockup17HeroMutation = {
   lede?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type PageBlocksOurTeamMockup17LeadershipPeopleRecordsMutation = {
+  label?: InputMaybe<Scalars['String']['input']>;
+  value?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type PageBlocksOurTeamMockup17LeadershipPeopleMutation = {
   name?: InputMaybe<Scalars['String']['input']>;
   role?: InputMaybe<Scalars['String']['input']>;
@@ -2062,6 +2109,10 @@ export type PageBlocksOurTeamMockup17LeadershipPeopleMutation = {
   image?: InputMaybe<Scalars['String']['input']>;
   imageAlt?: InputMaybe<Scalars['String']['input']>;
   bio?: InputMaybe<Scalars['String']['input']>;
+  tagline?: InputMaybe<Scalars['String']['input']>;
+  recordTitle?: InputMaybe<Scalars['String']['input']>;
+  authorSlug?: InputMaybe<Scalars['String']['input']>;
+  records?: InputMaybe<Array<InputMaybe<PageBlocksOurTeamMockup17LeadershipPeopleRecordsMutation>>>;
 };
 
 export type PageBlocksOurTeamMockup17LeadershipMutation = {
@@ -2077,6 +2128,7 @@ export type PageBlocksOurTeamMockup17SeniorStaffPeopleMutation = {
   image?: InputMaybe<Scalars['String']['input']>;
   imageAlt?: InputMaybe<Scalars['String']['input']>;
   bio?: InputMaybe<Scalars['String']['input']>;
+  authorSlug?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PageBlocksOurTeamMockup17SeniorStaffMutation = {
@@ -2095,6 +2147,9 @@ export type PageBlocksContactMockup17HeroMutation = {
   eyebrow?: InputMaybe<Scalars['String']['input']>;
   headline?: InputMaybe<Scalars['String']['input']>;
   lede?: InputMaybe<Scalars['String']['input']>;
+  newsroomEmail?: InputMaybe<Scalars['String']['input']>;
+  generalEmail?: InputMaybe<Scalars['String']['input']>;
+  replyTime?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PageBlocksContactMockup17FormSectionMutation = {
@@ -2103,6 +2158,9 @@ export type PageBlocksContactMockup17FormSectionMutation = {
   description?: InputMaybe<Scalars['String']['input']>;
   buttonText?: InputMaybe<Scalars['String']['input']>;
   note?: InputMaybe<Scalars['String']['input']>;
+  goesTo?: InputMaybe<Scalars['String']['input']>;
+  readBy?: InputMaybe<Scalars['String']['input']>;
+  replyWindow?: InputMaybe<Scalars['String']['input']>;
   formAction?: InputMaybe<Scalars['String']['input']>;
   subject?: InputMaybe<Scalars['String']['input']>;
 };
@@ -2414,6 +2472,9 @@ export type BlogFilter = {
   heroImage?: ImageFilter | null | undefined;
   authorAlt?: StringFilter | null | undefined;
   heroImageAlt?: StringFilter | null | undefined;
+  heroImageCaption?: StringFilter | null | undefined;
+  correctionDate?: DatetimeFilter | null | undefined;
+  correctionText?: StringFilter | null | undefined;
   body?: BlogBodyFilter | null | undefined;
 };
 
@@ -2672,6 +2733,11 @@ export type PageBlocksOurTeamMockup17HeroFilter = {
   lede?: StringFilter | null | undefined;
 };
 
+export type PageBlocksOurTeamMockup17LeadershipPeopleRecordsFilter = {
+  label?: StringFilter | null | undefined;
+  value?: StringFilter | null | undefined;
+};
+
 export type PageBlocksOurTeamMockup17LeadershipPeopleFilter = {
   name?: StringFilter | null | undefined;
   role?: StringFilter | null | undefined;
@@ -2679,6 +2745,10 @@ export type PageBlocksOurTeamMockup17LeadershipPeopleFilter = {
   image?: ImageFilter | null | undefined;
   imageAlt?: StringFilter | null | undefined;
   bio?: StringFilter | null | undefined;
+  tagline?: StringFilter | null | undefined;
+  recordTitle?: StringFilter | null | undefined;
+  authorSlug?: StringFilter | null | undefined;
+  records?: PageBlocksOurTeamMockup17LeadershipPeopleRecordsFilter | null | undefined;
 };
 
 export type PageBlocksOurTeamMockup17LeadershipFilter = {
@@ -2694,6 +2764,7 @@ export type PageBlocksOurTeamMockup17SeniorStaffPeopleFilter = {
   image?: ImageFilter | null | undefined;
   imageAlt?: StringFilter | null | undefined;
   bio?: StringFilter | null | undefined;
+  authorSlug?: StringFilter | null | undefined;
 };
 
 export type PageBlocksOurTeamMockup17SeniorStaffFilter = {
@@ -2712,6 +2783,9 @@ export type PageBlocksContactMockup17HeroFilter = {
   eyebrow?: StringFilter | null | undefined;
   headline?: StringFilter | null | undefined;
   lede?: StringFilter | null | undefined;
+  newsroomEmail?: StringFilter | null | undefined;
+  generalEmail?: StringFilter | null | undefined;
+  replyTime?: StringFilter | null | undefined;
 };
 
 export type PageBlocksContactMockup17FormSectionFilter = {
@@ -2720,6 +2794,9 @@ export type PageBlocksContactMockup17FormSectionFilter = {
   description?: StringFilter | null | undefined;
   buttonText?: StringFilter | null | undefined;
   note?: StringFilter | null | undefined;
+  goesTo?: StringFilter | null | undefined;
+  readBy?: StringFilter | null | undefined;
+  replyWindow?: StringFilter | null | undefined;
   formAction?: StringFilter | null | undefined;
   subject?: StringFilter | null | undefined;
 };
@@ -2982,15 +3059,15 @@ export type ConfigFilter = {
   footerStarfield?: BooleanFilter | null | undefined;
 };
 
-export type BlogPartsFragment = { __typename: 'Blog', viewPostShortcut: string | null, title: string, permalink: string | null, description: string | null, pubDate: string | null, updatedDate: string | null, categories: Array<string | null> | null, heroImage: string | null, authorAlt: string | null, heroImageAlt: string | null, body: any, seo: { __typename: 'BlogSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, author: { __typename: 'User', name: string, role: string | null, avatar: string | null, bio: string | null, email: string | null, id: string, seo: { __typename: 'UserSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null };
+export type BlogPartsFragment = { __typename: 'Blog', viewPostShortcut: string | null, title: string, permalink: string | null, description: string | null, pubDate: string | null, updatedDate: string | null, categories: Array<string | null> | null, heroImage: string | null, authorAlt: string | null, heroImageAlt: string | null, heroImageCaption: string | null, correctionDate: string | null, correctionText: string | null, body: any, seo: { __typename: 'BlogSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, author: { __typename: 'User', name: string, role: string | null, avatar: string | null, bio: string | null, email: string | null, id: string, seo: { __typename: 'UserSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null };
 
 export type CategoryPartsFragment = { __typename: 'Category', title: string, description: string | null, seo: { __typename: 'CategorySeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null };
 
 export type PagePartsFragment = { __typename: 'Page', viewPageShortcut: string | null, title: string, permalink: string | null, seo: { __typename: 'PageSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, blocks: Array<
     | { __typename: 'PageBlocksHomepageTemplate', hero: { __typename: 'PageBlocksHomepageTemplateHero', tag: string | null, title: string | null, description: string | null, image: string | null, imageAlt: string | null } | null, latest: { __typename: 'PageBlocksHomepageTemplateLatest', title: string | null, updatedLabel: string | null, items: Array<{ __typename: 'PageBlocksHomepageTemplateLatestItems', category: string | null, meta: string | null, title: string | null, description: string | null, image: string | null, imageAlt: string | null, link: string | null } | null> | null } | null, mission: { __typename: 'PageBlocksHomepageTemplateMission', eyebrow: string | null, title: string | null, signature: string | null, paragraphs: Array<{ __typename: 'PageBlocksHomepageTemplateMissionParagraphs', text: string | null, bold: boolean | null } | null> | null } | null, coverage: { __typename: 'PageBlocksHomepageTemplateCoverage', eyebrow: string | null, title: string | null, items: Array<{ __typename: 'PageBlocksHomepageTemplateCoverageItems', number: string | null, label: string | null, title: string | null, text: string | null, link: string | null } | null> | null } | null, quote: { __typename: 'PageBlocksHomepageTemplateQuote', eyebrow: string | null, quote: string | null, author: string | null, byline: string | null, image: string | null, imageAlt: string | null } | null, standards: { __typename: 'PageBlocksHomepageTemplateStandards', eyebrow: string | null, title: string | null, seal: string | null, items: Array<{ __typename: 'PageBlocksHomepageTemplateStandardsItems', tab: string | null, number: string | null, text: string | null } | null> | null } | null, team: { __typename: 'PageBlocksHomepageTemplateTeam', eyebrow: string | null, title: string | null, members: Array<{ __typename: 'PageBlocksHomepageTemplateTeamMembers', image: string | null, imageAlt: string | null, name: string | null, role: string | null, text: string | null, link: string | null } | null> | null } | null, cta: { __typename: 'PageBlocksHomepageTemplateCta', eyebrow: string | null, title: string | null, description: string | null, buttonText: string | null, buttonLink: string | null, points: Array<{ __typename: 'PageBlocksHomepageTemplateCtaPoints', number: string | null, text: string | null } | null> | null } | null }
     | { __typename: 'PageBlocksAboutMockup17', hero: { __typename: 'PageBlocksAboutMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null } | null, purpose: { __typename: 'PageBlocksAboutMockup17Purpose', eyebrow: string | null, title: string | null, paragraphOne: string | null, pullquote: string | null, paragraphTwo: string | null } | null, coverage: { __typename: 'PageBlocksAboutMockup17Coverage', eyebrow: string | null, title: string | null, intro: string | null, items: Array<{ __typename: 'PageBlocksAboutMockup17CoverageItems', number: string | null, title: string | null, text: string | null, link: string | null } | null> | null } | null, standardsSection: { __typename: 'PageBlocksAboutMockup17StandardsSection', eyebrow: string | null, title: string | null, intro: string | null, items: Array<{ __typename: 'PageBlocksAboutMockup17StandardsSectionItems', number: string | null, title: string | null, text: string | null } | null> | null } | null, independence: { __typename: 'PageBlocksAboutMockup17Independence', eyebrow: string | null, title: string | null, image: string | null, imageAlt: string | null, paragraphOne: string | null, paragraphTwo: string | null, buttonText: string | null, buttonLink: string | null } | null, newsroom: { __typename: 'PageBlocksAboutMockup17Newsroom', eyebrow: string | null, title: string | null, intro: string | null, contacts: Array<{ __typename: 'PageBlocksAboutMockup17NewsroomContacts', icon: string | null, title: string | null, email: string | null, text: string | null } | null> | null } | null, publicationHeader: { __typename: 'PageBlocksAboutMockup17PublicationHeader', eyebrow: string | null, headline: string | null, description: string | null, facts: Array<{ __typename: 'PageBlocksAboutMockup17PublicationHeaderFacts', label: string | null, value: string | null } | null> | null } | null, documentSections: Array<{ __typename: 'PageBlocksAboutMockup17DocumentSections', number: string | null, navTitle: string | null, sectionLabel: string | null, title: string | null, lead: string | null, note: string | null, paragraphs: Array<{ __typename: 'PageBlocksAboutMockup17DocumentSectionsParagraphs', text: string | null } | null> | null, principles: Array<{ __typename: 'PageBlocksAboutMockup17DocumentSectionsPrinciples', number: string | null, text: string | null } | null> | null } | null> | null }
-    | { __typename: 'PageBlocksOurTeamMockup17', hero: { __typename: 'PageBlocksOurTeamMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null } | null, leadership: { __typename: 'PageBlocksOurTeamMockup17Leadership', eyebrow: string | null, title: string | null, people: Array<{ __typename: 'PageBlocksOurTeamMockup17LeadershipPeople', name: string | null, role: string | null, location: string | null, image: string | null, imageAlt: string | null, bio: string | null } | null> | null } | null, seniorStaff: { __typename: 'PageBlocksOurTeamMockup17SeniorStaff', eyebrow: string | null, title: string | null, people: Array<{ __typename: 'PageBlocksOurTeamMockup17SeniorStaffPeople', name: string | null, role: string | null, location: string | null, image: string | null, imageAlt: string | null, bio: string | null } | null> | null } | null }
-    | { __typename: 'PageBlocksContactMockup17', hero: { __typename: 'PageBlocksContactMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null } | null, formSection: { __typename: 'PageBlocksContactMockup17FormSection', eyebrow: string | null, title: string | null, description: string | null, buttonText: string | null, note: string | null, formAction: string | null, subject: string | null } | null, inboxes: { __typename: 'PageBlocksContactMockup17Inboxes', eyebrow: string | null, title: string | null, cards: Array<{ __typename: 'PageBlocksContactMockup17InboxesCards', title: string | null, description: string | null, email: string | null, note: string | null } | null> | null } | null, requests: { __typename: 'PageBlocksContactMockup17Requests', eyebrow: string | null, title: string | null, intro: string | null, cards: Array<{ __typename: 'PageBlocksContactMockup17RequestsCards', icon: string | null, title: string | null, text: string | null } | null> | null } | null }
+    | { __typename: 'PageBlocksOurTeamMockup17', hero: { __typename: 'PageBlocksOurTeamMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null } | null, leadership: { __typename: 'PageBlocksOurTeamMockup17Leadership', eyebrow: string | null, title: string | null, people: Array<{ __typename: 'PageBlocksOurTeamMockup17LeadershipPeople', name: string | null, role: string | null, location: string | null, image: string | null, imageAlt: string | null, bio: string | null, tagline: string | null, recordTitle: string | null, authorSlug: string | null, records: Array<{ __typename: 'PageBlocksOurTeamMockup17LeadershipPeopleRecords', label: string | null, value: string | null } | null> | null } | null> | null } | null, seniorStaff: { __typename: 'PageBlocksOurTeamMockup17SeniorStaff', eyebrow: string | null, title: string | null, people: Array<{ __typename: 'PageBlocksOurTeamMockup17SeniorStaffPeople', name: string | null, role: string | null, location: string | null, image: string | null, imageAlt: string | null, bio: string | null, authorSlug: string | null } | null> | null } | null }
+    | { __typename: 'PageBlocksContactMockup17', hero: { __typename: 'PageBlocksContactMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null, newsroomEmail: string | null, generalEmail: string | null, replyTime: string | null } | null, formSection: { __typename: 'PageBlocksContactMockup17FormSection', eyebrow: string | null, title: string | null, description: string | null, buttonText: string | null, note: string | null, goesTo: string | null, readBy: string | null, replyWindow: string | null, formAction: string | null, subject: string | null } | null, inboxes: { __typename: 'PageBlocksContactMockup17Inboxes', eyebrow: string | null, title: string | null, cards: Array<{ __typename: 'PageBlocksContactMockup17InboxesCards', title: string | null, description: string | null, email: string | null, note: string | null } | null> | null } | null, requests: { __typename: 'PageBlocksContactMockup17Requests', eyebrow: string | null, title: string | null, intro: string | null, cards: Array<{ __typename: 'PageBlocksContactMockup17RequestsCards', icon: string | null, title: string | null, text: string | null } | null> | null } | null }
     | { __typename: 'PageBlocksHero', headline: string | null, tagline: string | null, starfield: boolean | null, actions: Array<{ __typename: 'PageBlocksHeroActions', label: string | null, type: string | null, icon: string | null, link: string | null } | null> | null, image: { __typename: 'PageBlocksHeroImage', src: string | null, alt: string | null } | null }
     | { __typename: 'PageBlocksCallout', text: string | null, url: string | null }
     | { __typename: 'PageBlocksFeatures', title: string | null, description: string | null, items: Array<{ __typename: 'PageBlocksFeaturesItems', icon: string | null, title: string | null, text: any } | null> | null }
@@ -3013,7 +3090,7 @@ export type BlogQueryVariables = Exact<{
 }>;
 
 
-export type BlogQuery = { blog: { __typename: 'Blog', id: string, viewPostShortcut: string | null, title: string, permalink: string | null, description: string | null, pubDate: string | null, updatedDate: string | null, categories: Array<string | null> | null, heroImage: string | null, authorAlt: string | null, heroImageAlt: string | null, body: any, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'BlogSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, author: { __typename: 'User', name: string, role: string | null, avatar: string | null, bio: string | null, email: string | null, id: string, seo: { __typename: 'UserSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } };
+export type BlogQuery = { blog: { __typename: 'Blog', id: string, viewPostShortcut: string | null, title: string, permalink: string | null, description: string | null, pubDate: string | null, updatedDate: string | null, categories: Array<string | null> | null, heroImage: string | null, authorAlt: string | null, heroImageAlt: string | null, heroImageCaption: string | null, correctionDate: string | null, correctionText: string | null, body: any, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'BlogSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, author: { __typename: 'User', name: string, role: string | null, avatar: string | null, bio: string | null, email: string | null, id: string, seo: { __typename: 'UserSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } };
 
 export type BlogConnectionQueryVariables = Exact<{
   before?: string | null | undefined;
@@ -3025,7 +3102,7 @@ export type BlogConnectionQueryVariables = Exact<{
 }>;
 
 
-export type BlogConnectionQuery = { blogConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Blog', id: string, viewPostShortcut: string | null, title: string, permalink: string | null, description: string | null, pubDate: string | null, updatedDate: string | null, categories: Array<string | null> | null, heroImage: string | null, authorAlt: string | null, heroImageAlt: string | null, body: any, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'BlogSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, author: { __typename: 'User', name: string, role: string | null, avatar: string | null, bio: string | null, email: string | null, id: string, seo: { __typename: 'UserSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } | null } | null> | null } };
+export type BlogConnectionQuery = { blogConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Blog', id: string, viewPostShortcut: string | null, title: string, permalink: string | null, description: string | null, pubDate: string | null, updatedDate: string | null, categories: Array<string | null> | null, heroImage: string | null, authorAlt: string | null, heroImageAlt: string | null, heroImageCaption: string | null, correctionDate: string | null, correctionText: string | null, body: any, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'BlogSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, author: { __typename: 'User', name: string, role: string | null, avatar: string | null, bio: string | null, email: string | null, id: string, seo: { __typename: 'UserSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } | null } | null> | null } };
 
 export type CategoryQueryVariables = Exact<{
   relativePath: string;
@@ -3054,8 +3131,8 @@ export type PageQueryVariables = Exact<{
 export type PageQuery = { page: { __typename: 'Page', id: string, viewPageShortcut: string | null, title: string, permalink: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'PageSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, blocks: Array<
       | { __typename: 'PageBlocksHomepageTemplate', hero: { __typename: 'PageBlocksHomepageTemplateHero', tag: string | null, title: string | null, description: string | null, image: string | null, imageAlt: string | null } | null, latest: { __typename: 'PageBlocksHomepageTemplateLatest', title: string | null, updatedLabel: string | null, items: Array<{ __typename: 'PageBlocksHomepageTemplateLatestItems', category: string | null, meta: string | null, title: string | null, description: string | null, image: string | null, imageAlt: string | null, link: string | null } | null> | null } | null, mission: { __typename: 'PageBlocksHomepageTemplateMission', eyebrow: string | null, title: string | null, signature: string | null, paragraphs: Array<{ __typename: 'PageBlocksHomepageTemplateMissionParagraphs', text: string | null, bold: boolean | null } | null> | null } | null, coverage: { __typename: 'PageBlocksHomepageTemplateCoverage', eyebrow: string | null, title: string | null, items: Array<{ __typename: 'PageBlocksHomepageTemplateCoverageItems', number: string | null, label: string | null, title: string | null, text: string | null, link: string | null } | null> | null } | null, quote: { __typename: 'PageBlocksHomepageTemplateQuote', eyebrow: string | null, quote: string | null, author: string | null, byline: string | null, image: string | null, imageAlt: string | null } | null, standards: { __typename: 'PageBlocksHomepageTemplateStandards', eyebrow: string | null, title: string | null, seal: string | null, items: Array<{ __typename: 'PageBlocksHomepageTemplateStandardsItems', tab: string | null, number: string | null, text: string | null } | null> | null } | null, team: { __typename: 'PageBlocksHomepageTemplateTeam', eyebrow: string | null, title: string | null, members: Array<{ __typename: 'PageBlocksHomepageTemplateTeamMembers', image: string | null, imageAlt: string | null, name: string | null, role: string | null, text: string | null, link: string | null } | null> | null } | null, cta: { __typename: 'PageBlocksHomepageTemplateCta', eyebrow: string | null, title: string | null, description: string | null, buttonText: string | null, buttonLink: string | null, points: Array<{ __typename: 'PageBlocksHomepageTemplateCtaPoints', number: string | null, text: string | null } | null> | null } | null }
       | { __typename: 'PageBlocksAboutMockup17', hero: { __typename: 'PageBlocksAboutMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null } | null, purpose: { __typename: 'PageBlocksAboutMockup17Purpose', eyebrow: string | null, title: string | null, paragraphOne: string | null, pullquote: string | null, paragraphTwo: string | null } | null, coverage: { __typename: 'PageBlocksAboutMockup17Coverage', eyebrow: string | null, title: string | null, intro: string | null, items: Array<{ __typename: 'PageBlocksAboutMockup17CoverageItems', number: string | null, title: string | null, text: string | null, link: string | null } | null> | null } | null, standardsSection: { __typename: 'PageBlocksAboutMockup17StandardsSection', eyebrow: string | null, title: string | null, intro: string | null, items: Array<{ __typename: 'PageBlocksAboutMockup17StandardsSectionItems', number: string | null, title: string | null, text: string | null } | null> | null } | null, independence: { __typename: 'PageBlocksAboutMockup17Independence', eyebrow: string | null, title: string | null, image: string | null, imageAlt: string | null, paragraphOne: string | null, paragraphTwo: string | null, buttonText: string | null, buttonLink: string | null } | null, newsroom: { __typename: 'PageBlocksAboutMockup17Newsroom', eyebrow: string | null, title: string | null, intro: string | null, contacts: Array<{ __typename: 'PageBlocksAboutMockup17NewsroomContacts', icon: string | null, title: string | null, email: string | null, text: string | null } | null> | null } | null, publicationHeader: { __typename: 'PageBlocksAboutMockup17PublicationHeader', eyebrow: string | null, headline: string | null, description: string | null, facts: Array<{ __typename: 'PageBlocksAboutMockup17PublicationHeaderFacts', label: string | null, value: string | null } | null> | null } | null, documentSections: Array<{ __typename: 'PageBlocksAboutMockup17DocumentSections', number: string | null, navTitle: string | null, sectionLabel: string | null, title: string | null, lead: string | null, note: string | null, paragraphs: Array<{ __typename: 'PageBlocksAboutMockup17DocumentSectionsParagraphs', text: string | null } | null> | null, principles: Array<{ __typename: 'PageBlocksAboutMockup17DocumentSectionsPrinciples', number: string | null, text: string | null } | null> | null } | null> | null }
-      | { __typename: 'PageBlocksOurTeamMockup17', hero: { __typename: 'PageBlocksOurTeamMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null } | null, leadership: { __typename: 'PageBlocksOurTeamMockup17Leadership', eyebrow: string | null, title: string | null, people: Array<{ __typename: 'PageBlocksOurTeamMockup17LeadershipPeople', name: string | null, role: string | null, location: string | null, image: string | null, imageAlt: string | null, bio: string | null } | null> | null } | null, seniorStaff: { __typename: 'PageBlocksOurTeamMockup17SeniorStaff', eyebrow: string | null, title: string | null, people: Array<{ __typename: 'PageBlocksOurTeamMockup17SeniorStaffPeople', name: string | null, role: string | null, location: string | null, image: string | null, imageAlt: string | null, bio: string | null } | null> | null } | null }
-      | { __typename: 'PageBlocksContactMockup17', hero: { __typename: 'PageBlocksContactMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null } | null, formSection: { __typename: 'PageBlocksContactMockup17FormSection', eyebrow: string | null, title: string | null, description: string | null, buttonText: string | null, note: string | null, formAction: string | null, subject: string | null } | null, inboxes: { __typename: 'PageBlocksContactMockup17Inboxes', eyebrow: string | null, title: string | null, cards: Array<{ __typename: 'PageBlocksContactMockup17InboxesCards', title: string | null, description: string | null, email: string | null, note: string | null } | null> | null } | null, requests: { __typename: 'PageBlocksContactMockup17Requests', eyebrow: string | null, title: string | null, intro: string | null, cards: Array<{ __typename: 'PageBlocksContactMockup17RequestsCards', icon: string | null, title: string | null, text: string | null } | null> | null } | null }
+      | { __typename: 'PageBlocksOurTeamMockup17', hero: { __typename: 'PageBlocksOurTeamMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null } | null, leadership: { __typename: 'PageBlocksOurTeamMockup17Leadership', eyebrow: string | null, title: string | null, people: Array<{ __typename: 'PageBlocksOurTeamMockup17LeadershipPeople', name: string | null, role: string | null, location: string | null, image: string | null, imageAlt: string | null, bio: string | null, tagline: string | null, recordTitle: string | null, authorSlug: string | null, records: Array<{ __typename: 'PageBlocksOurTeamMockup17LeadershipPeopleRecords', label: string | null, value: string | null } | null> | null } | null> | null } | null, seniorStaff: { __typename: 'PageBlocksOurTeamMockup17SeniorStaff', eyebrow: string | null, title: string | null, people: Array<{ __typename: 'PageBlocksOurTeamMockup17SeniorStaffPeople', name: string | null, role: string | null, location: string | null, image: string | null, imageAlt: string | null, bio: string | null, authorSlug: string | null } | null> | null } | null }
+      | { __typename: 'PageBlocksContactMockup17', hero: { __typename: 'PageBlocksContactMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null, newsroomEmail: string | null, generalEmail: string | null, replyTime: string | null } | null, formSection: { __typename: 'PageBlocksContactMockup17FormSection', eyebrow: string | null, title: string | null, description: string | null, buttonText: string | null, note: string | null, goesTo: string | null, readBy: string | null, replyWindow: string | null, formAction: string | null, subject: string | null } | null, inboxes: { __typename: 'PageBlocksContactMockup17Inboxes', eyebrow: string | null, title: string | null, cards: Array<{ __typename: 'PageBlocksContactMockup17InboxesCards', title: string | null, description: string | null, email: string | null, note: string | null } | null> | null } | null, requests: { __typename: 'PageBlocksContactMockup17Requests', eyebrow: string | null, title: string | null, intro: string | null, cards: Array<{ __typename: 'PageBlocksContactMockup17RequestsCards', icon: string | null, title: string | null, text: string | null } | null> | null } | null }
       | { __typename: 'PageBlocksHero', headline: string | null, tagline: string | null, starfield: boolean | null, actions: Array<{ __typename: 'PageBlocksHeroActions', label: string | null, type: string | null, icon: string | null, link: string | null } | null> | null, image: { __typename: 'PageBlocksHeroImage', src: string | null, alt: string | null } | null }
       | { __typename: 'PageBlocksCallout', text: string | null, url: string | null }
       | { __typename: 'PageBlocksFeatures', title: string | null, description: string | null, items: Array<{ __typename: 'PageBlocksFeaturesItems', icon: string | null, title: string | null, text: any } | null> | null }
@@ -3080,8 +3157,8 @@ export type PageConnectionQueryVariables = Exact<{
 export type PageConnectionQuery = { pageConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Page', id: string, viewPageShortcut: string | null, title: string, permalink: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, seo: { __typename: 'PageSeo', metaTitle: string | null, metaDescription: string | null, ogTitle: string | null, ogDescription: string | null, ogImage: string | null, canonicalUrl: string | null, noindex: boolean | null, nofollow: boolean | null } | null, blocks: Array<
           | { __typename: 'PageBlocksHomepageTemplate', hero: { __typename: 'PageBlocksHomepageTemplateHero', tag: string | null, title: string | null, description: string | null, image: string | null, imageAlt: string | null } | null, latest: { __typename: 'PageBlocksHomepageTemplateLatest', title: string | null, updatedLabel: string | null, items: Array<{ __typename: 'PageBlocksHomepageTemplateLatestItems', category: string | null, meta: string | null, title: string | null, description: string | null, image: string | null, imageAlt: string | null, link: string | null } | null> | null } | null, mission: { __typename: 'PageBlocksHomepageTemplateMission', eyebrow: string | null, title: string | null, signature: string | null, paragraphs: Array<{ __typename: 'PageBlocksHomepageTemplateMissionParagraphs', text: string | null, bold: boolean | null } | null> | null } | null, coverage: { __typename: 'PageBlocksHomepageTemplateCoverage', eyebrow: string | null, title: string | null, items: Array<{ __typename: 'PageBlocksHomepageTemplateCoverageItems', number: string | null, label: string | null, title: string | null, text: string | null, link: string | null } | null> | null } | null, quote: { __typename: 'PageBlocksHomepageTemplateQuote', eyebrow: string | null, quote: string | null, author: string | null, byline: string | null, image: string | null, imageAlt: string | null } | null, standards: { __typename: 'PageBlocksHomepageTemplateStandards', eyebrow: string | null, title: string | null, seal: string | null, items: Array<{ __typename: 'PageBlocksHomepageTemplateStandardsItems', tab: string | null, number: string | null, text: string | null } | null> | null } | null, team: { __typename: 'PageBlocksHomepageTemplateTeam', eyebrow: string | null, title: string | null, members: Array<{ __typename: 'PageBlocksHomepageTemplateTeamMembers', image: string | null, imageAlt: string | null, name: string | null, role: string | null, text: string | null, link: string | null } | null> | null } | null, cta: { __typename: 'PageBlocksHomepageTemplateCta', eyebrow: string | null, title: string | null, description: string | null, buttonText: string | null, buttonLink: string | null, points: Array<{ __typename: 'PageBlocksHomepageTemplateCtaPoints', number: string | null, text: string | null } | null> | null } | null }
           | { __typename: 'PageBlocksAboutMockup17', hero: { __typename: 'PageBlocksAboutMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null } | null, purpose: { __typename: 'PageBlocksAboutMockup17Purpose', eyebrow: string | null, title: string | null, paragraphOne: string | null, pullquote: string | null, paragraphTwo: string | null } | null, coverage: { __typename: 'PageBlocksAboutMockup17Coverage', eyebrow: string | null, title: string | null, intro: string | null, items: Array<{ __typename: 'PageBlocksAboutMockup17CoverageItems', number: string | null, title: string | null, text: string | null, link: string | null } | null> | null } | null, standardsSection: { __typename: 'PageBlocksAboutMockup17StandardsSection', eyebrow: string | null, title: string | null, intro: string | null, items: Array<{ __typename: 'PageBlocksAboutMockup17StandardsSectionItems', number: string | null, title: string | null, text: string | null } | null> | null } | null, independence: { __typename: 'PageBlocksAboutMockup17Independence', eyebrow: string | null, title: string | null, image: string | null, imageAlt: string | null, paragraphOne: string | null, paragraphTwo: string | null, buttonText: string | null, buttonLink: string | null } | null, newsroom: { __typename: 'PageBlocksAboutMockup17Newsroom', eyebrow: string | null, title: string | null, intro: string | null, contacts: Array<{ __typename: 'PageBlocksAboutMockup17NewsroomContacts', icon: string | null, title: string | null, email: string | null, text: string | null } | null> | null } | null, publicationHeader: { __typename: 'PageBlocksAboutMockup17PublicationHeader', eyebrow: string | null, headline: string | null, description: string | null, facts: Array<{ __typename: 'PageBlocksAboutMockup17PublicationHeaderFacts', label: string | null, value: string | null } | null> | null } | null, documentSections: Array<{ __typename: 'PageBlocksAboutMockup17DocumentSections', number: string | null, navTitle: string | null, sectionLabel: string | null, title: string | null, lead: string | null, note: string | null, paragraphs: Array<{ __typename: 'PageBlocksAboutMockup17DocumentSectionsParagraphs', text: string | null } | null> | null, principles: Array<{ __typename: 'PageBlocksAboutMockup17DocumentSectionsPrinciples', number: string | null, text: string | null } | null> | null } | null> | null }
-          | { __typename: 'PageBlocksOurTeamMockup17', hero: { __typename: 'PageBlocksOurTeamMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null } | null, leadership: { __typename: 'PageBlocksOurTeamMockup17Leadership', eyebrow: string | null, title: string | null, people: Array<{ __typename: 'PageBlocksOurTeamMockup17LeadershipPeople', name: string | null, role: string | null, location: string | null, image: string | null, imageAlt: string | null, bio: string | null } | null> | null } | null, seniorStaff: { __typename: 'PageBlocksOurTeamMockup17SeniorStaff', eyebrow: string | null, title: string | null, people: Array<{ __typename: 'PageBlocksOurTeamMockup17SeniorStaffPeople', name: string | null, role: string | null, location: string | null, image: string | null, imageAlt: string | null, bio: string | null } | null> | null } | null }
-          | { __typename: 'PageBlocksContactMockup17', hero: { __typename: 'PageBlocksContactMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null } | null, formSection: { __typename: 'PageBlocksContactMockup17FormSection', eyebrow: string | null, title: string | null, description: string | null, buttonText: string | null, note: string | null, formAction: string | null, subject: string | null } | null, inboxes: { __typename: 'PageBlocksContactMockup17Inboxes', eyebrow: string | null, title: string | null, cards: Array<{ __typename: 'PageBlocksContactMockup17InboxesCards', title: string | null, description: string | null, email: string | null, note: string | null } | null> | null } | null, requests: { __typename: 'PageBlocksContactMockup17Requests', eyebrow: string | null, title: string | null, intro: string | null, cards: Array<{ __typename: 'PageBlocksContactMockup17RequestsCards', icon: string | null, title: string | null, text: string | null } | null> | null } | null }
+          | { __typename: 'PageBlocksOurTeamMockup17', hero: { __typename: 'PageBlocksOurTeamMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null } | null, leadership: { __typename: 'PageBlocksOurTeamMockup17Leadership', eyebrow: string | null, title: string | null, people: Array<{ __typename: 'PageBlocksOurTeamMockup17LeadershipPeople', name: string | null, role: string | null, location: string | null, image: string | null, imageAlt: string | null, bio: string | null, tagline: string | null, recordTitle: string | null, authorSlug: string | null, records: Array<{ __typename: 'PageBlocksOurTeamMockup17LeadershipPeopleRecords', label: string | null, value: string | null } | null> | null } | null> | null } | null, seniorStaff: { __typename: 'PageBlocksOurTeamMockup17SeniorStaff', eyebrow: string | null, title: string | null, people: Array<{ __typename: 'PageBlocksOurTeamMockup17SeniorStaffPeople', name: string | null, role: string | null, location: string | null, image: string | null, imageAlt: string | null, bio: string | null, authorSlug: string | null } | null> | null } | null }
+          | { __typename: 'PageBlocksContactMockup17', hero: { __typename: 'PageBlocksContactMockup17Hero', eyebrow: string | null, headline: string | null, lede: string | null, newsroomEmail: string | null, generalEmail: string | null, replyTime: string | null } | null, formSection: { __typename: 'PageBlocksContactMockup17FormSection', eyebrow: string | null, title: string | null, description: string | null, buttonText: string | null, note: string | null, goesTo: string | null, readBy: string | null, replyWindow: string | null, formAction: string | null, subject: string | null } | null, inboxes: { __typename: 'PageBlocksContactMockup17Inboxes', eyebrow: string | null, title: string | null, cards: Array<{ __typename: 'PageBlocksContactMockup17InboxesCards', title: string | null, description: string | null, email: string | null, note: string | null } | null> | null } | null, requests: { __typename: 'PageBlocksContactMockup17Requests', eyebrow: string | null, title: string | null, intro: string | null, cards: Array<{ __typename: 'PageBlocksContactMockup17RequestsCards', icon: string | null, title: string | null, text: string | null } | null> | null } | null }
           | { __typename: 'PageBlocksHero', headline: string | null, tagline: string | null, starfield: boolean | null, actions: Array<{ __typename: 'PageBlocksHeroActions', label: string | null, type: string | null, icon: string | null, link: string | null } | null> | null, image: { __typename: 'PageBlocksHeroImage', src: string | null, alt: string | null } | null }
           | { __typename: 'PageBlocksCallout', text: string | null, url: string | null }
           | { __typename: 'PageBlocksFeatures', title: string | null, description: string | null, items: Array<{ __typename: 'PageBlocksFeaturesItems', icon: string | null, title: string | null, text: any } | null> | null }
@@ -3207,6 +3284,9 @@ export const BlogPartsFragmentDoc = gql`
   heroImage
   authorAlt
   heroImageAlt
+  heroImageCaption
+  correctionDate
+  correctionText
   body
 }
     `;
@@ -3457,6 +3537,14 @@ export const PagePartsFragmentDoc = gql`
           image
           imageAlt
           bio
+          tagline
+          recordTitle
+          authorSlug
+          records {
+            __typename
+            label
+            value
+          }
         }
       }
       seniorStaff {
@@ -3471,6 +3559,7 @@ export const PagePartsFragmentDoc = gql`
           image
           imageAlt
           bio
+          authorSlug
         }
       }
     }
@@ -3480,6 +3569,9 @@ export const PagePartsFragmentDoc = gql`
         eyebrow
         headline
         lede
+        newsroomEmail
+        generalEmail
+        replyTime
       }
       formSection {
         __typename
@@ -3488,6 +3580,9 @@ export const PagePartsFragmentDoc = gql`
         description
         buttonText
         note
+        goesTo
+        readBy
+        replyWindow
         formAction
         subject
       }

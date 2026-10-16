@@ -369,6 +369,9 @@ var BlogCollection = {
     { name: "heroImage", label: "Hero Image", type: "image" },
     { name: "authorAlt", label: "Author Alt Text", type: "string", description: "Alt text for the author image." },
     { name: "heroImageAlt", label: "Hero Image Alt Text", type: "string", description: "Alt text for the hero image." },
+    { name: "heroImageCaption", label: "Hero Image Caption", type: "string", ui: { component: "textarea" } },
+    { name: "correctionDate", label: "Correction Date", type: "datetime" },
+    { name: "correctionText", label: "Correction Notice", type: "string", ui: { component: "textarea" } },
     { type: "rich-text", name: "body", label: "Body", isBody: true, templates: [youTubeEmbedTemplate] }
   ]
 };
@@ -959,7 +962,10 @@ var contactMockup17BlockSchema = {
       fields: [
         { name: "eyebrow", label: "Eyebrow", type: "string" },
         { name: "headline", label: "Headline", type: "string" },
-        { name: "lede", label: "Lede", type: "string", ui: { component: "textarea" } }
+        { name: "lede", label: "Lede", type: "string", ui: { component: "textarea" } },
+        { name: "newsroomEmail", label: "Newsroom Email", type: "string" },
+        { name: "generalEmail", label: "General Email", type: "string" },
+        { name: "replyTime", label: "Typical Reply Time", type: "string" }
       ]
     },
     {
@@ -972,6 +978,9 @@ var contactMockup17BlockSchema = {
         { name: "description", label: "Description", type: "string", ui: { component: "textarea" } },
         { name: "buttonText", label: "Button Text", type: "string" },
         { name: "note", label: "Form Note", type: "string", ui: { component: "textarea" } },
+        { name: "goesTo", label: "Goes To", type: "string" },
+        { name: "readBy", label: "Read By", type: "string" },
+        { name: "replyWindow", label: "Reply Window", type: "string" },
         { name: "formAction", label: "Form Action URL / Formspree Endpoint", type: "string", description: "Optional. Leave blank to keep the form non-submitting until an endpoint is added." },
         { name: "subject", label: "Email Subject", type: "string" }
       ]
@@ -1040,7 +1049,14 @@ var ourTeamMockup17BlockSchema = {
         { name: "location", label: "Location", type: "string" },
         { name: "image", label: "Photo", type: "image" },
         { name: "imageAlt", label: "Photo Alt Text", type: "string" },
-        { name: "bio", label: "Bio", type: "string", ui: { component: "textarea" } }
+        { name: "bio", label: "Bio", type: "string", ui: { component: "textarea" } },
+        { name: "tagline", label: "Leadership Tagline", type: "string" },
+        { name: "recordTitle", label: "Record Panel Title", type: "string" },
+        { name: "authorSlug", label: "Author Archive Slug", type: "string" },
+        { name: "records", label: "On-the-record Details", type: "object", list: true, fields: [
+          { name: "label", label: "Label", type: "string" },
+          { name: "value", label: "Value", type: "string" }
+        ] }
       ] }
     ] },
     { type: "object", name: "seniorStaff", label: "Senior Editorial Staff Section", fields: [
@@ -1052,7 +1068,8 @@ var ourTeamMockup17BlockSchema = {
         { name: "location", label: "Location", type: "string" },
         { name: "image", label: "Photo", type: "image" },
         { name: "imageAlt", label: "Photo Alt Text", type: "string" },
-        { name: "bio", label: "Bio", type: "string", ui: { component: "textarea" } }
+        { name: "bio", label: "Bio", type: "string", ui: { component: "textarea" } },
+        { name: "authorSlug", label: "Author Archive Slug", type: "string" }
       ] }
     ] }
   ]
@@ -1329,7 +1346,7 @@ var UserCollection = {
   format: "json",
   ui: {
     router({ document }) {
-      return `/blog/author/${document._sys.filename}/`;
+      return `/author/${document._sys.filename}/`;
     }
   },
   fields: [

@@ -129,6 +129,7 @@ if (view === 'not-found') {
       categoryDocumentSlug: categoryEntry.filename || categoryFromPosts?._sys?.filename || archiveTitle,
       basePath: '/' + parsed.slug,
       hasPosts: posts.length > 0,
+      totalStories: allCategoryPosts.length,
       seo: categorySeo,
       seoTitle: categorySeo?.metaTitle || archiveTitle + ' Articles | ' + (config?.seo?.title || 'Web News Release'),
       description: categorySeo?.metaDescription || editableCategory?.description || categoryEntry.data?.description || (allCategoryPosts.length > 0 ? 'Read the latest ' + archiveTitle + ' articles from Web News Release.' : 'Articles in the ' + archiveTitle + ' category will be published soon on Web News Release.'),
@@ -148,7 +149,7 @@ if (view === 'not-found') {
       const relatedPosts = allPosts
         .filter((post) => post._sys.filename !== documentSlug)
         .filter((post) => getReferenceKeys(getPostCategories(post)).some((key) => currentCategoryKeys.includes(key)))
-        .slice(0, 3);
+        .slice(0, 5);
       const seo = data.seo ?? null;
       const title = seo?.metaTitle || data.title || '';
       const description = seo?.metaDescription || data.description || '';
@@ -215,7 +216,7 @@ if (view === 'not-found') {
     nofollow={categoryContext.seo?.nofollow || false}
   >
     <TinaIsland name="category" wrapper={islands.category.wrapper} params={{ slug: categoryContext.categoryDocumentSlug }} primary>
-      <DemoCategoryArchive archiveTitle={categoryContext.archiveTitle} posts={categoryContext.posts} currentPage={categoryContext.currentPage} totalPages={categoryContext.totalPages} basePath={categoryContext.basePath} category={categoryContext.categoryFromPosts} />
+      <DemoCategoryArchive archiveTitle={categoryContext.archiveTitle} posts={categoryContext.posts} currentPage={categoryContext.currentPage} totalPages={categoryContext.totalPages} basePath={categoryContext.basePath} category={categoryContext.categoryFromPosts} totalStories={categoryContext.totalStories} />
     </TinaIsland>
   </Base>
 )}

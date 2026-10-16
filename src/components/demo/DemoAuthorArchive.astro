@@ -1,24 +1,54 @@
 ---
-import { tinaField } from '@tinacms/astro/tina-field';
 import { getBlogPermalink } from '../../lib/permalinks';
-import { labelFromReference, getPostCategories } from './DemoHelpers';
-const { archiveTitle = 'Author', author = null, posts = [], currentPage = 1, totalPages = 1, basePath = '/author' } = Astro.props;
-function postUrl(post: any) { const url = getBlogPermalink(post); return url.endsWith('/') ? url : url + '/'; }
-function pagePath(page: number) { return page <= 1 ? basePath + '/' : basePath + '/page/' + page + '/'; }
-const bio = author?.bio || `${archiveTitle} writes and edits coverage for Web News Release.`;
-const avatar = author?.avatar || '';
-const role = author?.role || '';
+import FormattedDate from '../FormattedDate.astro';
+import { tinaField } from '@tinacms/astro/tina-field';
+
+const { archiveTitle = 'Author', author = null, posts = [], currentPage = 1, totalPages = 1, basePath = '/', totalStories = posts.length } = Astro.props;
+function refs(post: any) {
+  return Array.isArray(post?.categories) && post.categories.length ? post.categories.map((item: any) => typeof item === 'string' ? item : item?.category).filter(Boolean) : post?.category ? [post.category] : [];
+}
+function label(reference: any) {
+  if (!reference) return '';
+  if (typeof reference === 'string') return reference.split('/').pop()?.replace(/\.(json|mdx?)$/i, '').replace(/[-_]+/g, ' ') || '';
+  return reference.title || reference.name || reference._sys?.filename || '';
+}
+function pageHref(page: number) { return page <= 1 ? `${basePath}/` : `${basePath}/page/${page}/`; }
+const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 ---
 
-<main class="ffn-demo ffn-demo-author">
-  <header class="ah"><div class="w"><div class="ah-in">
-    {avatar ? <img class="ah-img" src={avatar} alt={archiveTitle} data-tina-field={author ? tinaField(author, 'avatar') : undefined} /> : <div class="ah-img demo-img"></div>}
-    <div><div class="ah-k"><b>Author</b></div><h1 data-tina-field={author ? tinaField(author, 'name') : undefined}>{archiveTitle}</h1>{role && <div class="ah-r" data-tina-field={author ? tinaField(author, 'role') : undefined}>{role}</div>}<p class="ah-b" data-tina-field={author ? tinaField(author, 'bio') : undefined}>{bio}</p></div>
-  </div></div></header>
-  <section class="lg"><div class="w"><div class="lg-h"><div class="eye"><i></i><span>Most recent first</span></div><div class="h2">Stories by {archiveTitle}</div></div>
-    <div>
-      {posts.map((post: any) => <a href={postUrl(post)} class="si">{post.heroImage ? <img class="si-img" src={post.heroImage} alt="" /> : <div class="si-img demo-img"></div>}<div><div class="si-k">{labelFromReference(getPostCategories(post))}</div><div class="si-h">{post.title}</div>{post.description && <p class="si-x">{post.description}</p>}</div></a>)}
+<main class="mockup31-author">
+  <header class="ph">
+    <div class="ph-l">
+      <div class="ph-k">Author archive</div>
+      <h1 data-tina-field={author ? tinaField(author, 'name') : undefined}>{archiveTitle}</h1>
+      {author?.bio && <p class="ph-d" data-tina-field={tinaField(author, 'bio')}>{author.bio}</p>}
+    </div>
+    <div class="ph-r">
+      {author?.role && <div class="ph-row"><span class="ph-rk">Desk</span><span class="ph-rv" data-tina-field={tinaField(author, 'role')}>{author.role}</span></div>}
+      <div class="ph-row"><span class="ph-rk">Stories</span><span class="ph-rv">{totalStories}</span></div>
+      {author?.email && <div class="ph-row"><span class="ph-rk">Contact</span><span class="ph-rv" data-tina-field={tinaField(author, 'email')}>{author.email}</span></div>}
+    </div>
+  </header>
+  {(author?.avatar || author?.bio) && <section class="bio"><div class="w"><div class="bio-in">
+    {author?.avatar && <img class="bio-img" src={author.avatar} alt={archiveTitle} data-tina-field={tinaField(author, 'avatar')} />}
+    <div class="bio-b"><div class="bio-r">About the author</div>{author?.bio && <p data-tina-field={tinaField(author, 'bio')}>{author.bio}</p>}</div>
+  </div></div></section>}
+  <section class="arch"><div class="w">
+    <div class="eye"><i></i><span>Stories by this author</span></div>
+    <div class="lg">
+      {posts.length > 0 ? posts.map((post: any, index: number) => <a href={getBlogPermalink(post)} class="lr">
+        <div class="lr-n">{String((currentPage - 1) * 30 + index + 1).padStart(2, '0')}</div>
+        {post.heroImage && <img class="lr-img" src={post.heroImage} alt={post.heroImageAlt || post.title || 'Story image'} />}
+        <div>
+          <div class="lr-m"><span class="lr-k">{label(refs(post)[0]) || 'News'}</span>{post.pubDate && <span class="lr-dt"><FormattedDate date={new Date(post.pubDate)} /></span>}</div>
+          <div class="lr-h">{post.title || 'Untitled story'}</div>
+          {post.description && <p class="lr-x">{post.description}</p>}
+        </div>
+      </a>) : <div class="empty-archive"><p>No stories by this author are available yet.</p><a class="empty-archive__link" href="/">Read the latest stories</a></div>}
     </div>
   </div></section>
-  {totalPages > 1 && <nav class="pg" aria-label="Archive pagination"><div class="w"><a class="nx" href={pagePath(Math.max(1,currentPage-1))}>Prev</a>{Array.from({ length: Math.min(totalPages, 3) }).map((_, i) => { const p=i+1; return <a class={p===currentPage?'on':''} href={pagePath(p)}>{p}</a>; })}<span class="gap">…</span><a class="nx" href={pagePath(Math.min(totalPages,currentPage+1))}>Next →</a></div></nav>}
+  {totalPages > 1 && <section class="pg"><div class="pg-in">
+    {pageNumbers.map((page) => <a href={pageHref(page)} class={page === currentPage ? 'on' : undefined} aria-current={page === currentPage ? 'page' : undefined}>{page}</a>)}
+    {currentPage < totalPages && <a href={pageHref(currentPage + 1)} class="nx">Next</a>}
+  </div></section>}
 </main>

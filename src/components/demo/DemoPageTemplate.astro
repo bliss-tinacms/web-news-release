@@ -1,37 +1,62 @@
 ---
 import TinaMarkdown from '@tinacms/astro/TinaMarkdown.astro';
 import { tinaField } from '@tinacms/astro/tina-field';
+import { mdxComponents } from '../mdx/components';
+import DemoPageLead from './DemoPageLead.astro';
+import DemoPageList from './DemoPageList.astro';
 
 const { data } = Astro.props;
 const contentBlock = Array.isArray(data?.blocks)
   ? data.blocks.find((block: any) => block?.__typename === 'PageBlocksContent' || block?._template === 'content')
   : null;
-const title = data?.title || data?.seoTitle || 'Editorial Guidelines';
+const title = data?.title || data?.seoTitle || 'Page';
+const body: any = contentBlock?.body;
+const children: any[] = Array.isArray(body?.children) ? body.children : [];
+const groups: any[][] = [];
+let current: any[] = [];
+for (const node of children) {
+  if (node?.type === 'h2' && current.length) { groups.push(current); current = []; }
+  current.push(node);
+}
+if (current.length) groups.push(current);
+function fragment(nodes: any[]) { return body && typeof body === 'object' ? { ...body, children: nodes } : body; }
+const leadComponents = { ...mdxComponents, p: DemoPageLead, ul: DemoPageList };
+const pageComponents = { ...mdxComponents, ul: DemoPageList };
+function esc(value: string) { return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function inline(value: string) {
+  return esc(value)
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]+)\)/g, '<a href="$2">$1</a>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+}
+function renderBlocks(value: string) {
+  return value.trim().split(/\n\s*\n/).filter(Boolean).map((block) => {
+    const lines = block.split('\n').map((line) => line.trim()).filter(Boolean);
+    if (lines.every((line) => /^[-*]\s+/.test(line))) return `<ul class="dl">${lines.map((line) => `<li>${inline(line.replace(/^[-*]\s+/, ''))}</li>`).join('')}</ul>`;
+    if (lines.every((line) => /^\d+[.)]\s+/.test(line))) return `<ol class="dl">${lines.map((line) => `<li>${inline(line.replace(/^\d+[.)]\s+/, ''))}</li>`).join('')}</ol>`;
+    return `<p>${inline(lines.join(' '))}</p>`;
+  }).join('');
+}
+const stringGroups = typeof body === 'string' ? body.split(/^##\s+(.+)$/gm) : [];
+const stringLead = stringGroups.length ? stringGroups[0].trim() : '';
+const stringSections = [] as Array<{ heading: string; body: string }>;
+for (let index = 1; index < stringGroups.length; index += 2) stringSections.push({ heading: stringGroups[index].trim(), body: stringGroups[index + 1] || '' });
 ---
 
-<main class="ffn-demo ffn-demo-page-template">
-  <header class="pt"><div class="w">
-    <h1 data-tina-field={data ? tinaField(data, 'title') : undefined}>{title}</h1>
-  </div></header>
-  <div class="pg"><div class="w">
-    <article data-tina-field={contentBlock ? tinaField(contentBlock, 'body') : undefined}>
-      {contentBlock?.body ? (
-        <TinaMarkdown content={contentBlock.body} />
-      ) : (
-        <>
-          <p>This page is the content slot. Everything below is written as plain markdown or rich text — no classes are applied to any element, and the styling comes from the template.</p>
-          <h2>A second-level heading</h2>
-          <p>Body copy runs at nineteen pixels with generous leading. The opening paragraph is set slightly larger and darker so the page has an entry point, and that treatment applies only to the first paragraph.</p>
-          <p>Links inside prose, such as <a href="/contact/">this one</a>, take the darker orange so they clear contrast against white.</p>
-          <h3>A third-level heading</h3>
-          <ul>
-            <li>Unordered items take an orange square marker and a hairline rule.</li>
-            <li>The rules run between items, with one above the first.</li>
-            <li>Nothing here carries a class attribute.</li>
-          </ul>
-          <blockquote><p>Pull quotes sit on a black slab in the display face.</p><cite>Attribution line</cite></blockquote>
-        </>
-      )}
-    </article>
+<main class="mockup31-page">
+  <header class="ph">
+    <div class="ph-l"><h1 data-tina-field={data ? tinaField(data, 'title') : undefined}>{title}</h1></div>
+  </header>
+  <div class="w"><div class="doc" data-tina-field={contentBlock ? tinaField(contentBlock, 'body') : undefined}>
+    {typeof body === 'string' ? <>
+      {stringLead && <div class="lead" set:html={renderBlocks(stringLead)} />}
+      {stringSections.map((section) => <section class="sec"><h2>{section.heading}</h2><Fragment set:html={renderBlocks(section.body)} /></section>)}
+    </> : groups.length > 0 ? groups.map((group, index) => (
+      index === 0 && group[0]?.type !== 'h2'
+        ? <TinaMarkdown content={fragment(group)} components={leadComponents} />
+        : <section class="sec"><TinaMarkdown content={fragment(group)} components={pageComponents} /></section>
+    )) : body ? (
+      <section class="sec"><TinaMarkdown content={body} components={pageComponents} /></section>
+    ) : null}
   </div></div>
 </main>

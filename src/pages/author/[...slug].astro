@@ -108,5 +108,5 @@ const description = authorSeo?.metaDescription || editableAuthor?.bio || 'Read t
 	noindex={authorSeo?.noindex || false}
 	nofollow={authorSeo?.nofollow || false}
 >
-	<DemoAuthorArchive archiveTitle={archiveTitle} author={editableAuthor || authorObject} posts={posts} currentPage={currentPage} totalPages={totalPages} basePath={basePath} />
+		<DemoAuthorArchive archiveTitle={archiveTitle} author={editableAuthor || authorObject} posts={posts} currentPage={currentPage} totalPages={totalPages} basePath={basePath} totalStories={allPosts.length} />
 </Base>

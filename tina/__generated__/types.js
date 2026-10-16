@@ -62,6 +62,9 @@ export const BlogPartsFragmentDoc = gql`
   heroImage
   authorAlt
   heroImageAlt
+  heroImageCaption
+  correctionDate
+  correctionText
   body
 }
     `;
@@ -312,6 +315,14 @@ export const PagePartsFragmentDoc = gql`
           image
           imageAlt
           bio
+          tagline
+          recordTitle
+          authorSlug
+          records {
+            __typename
+            label
+            value
+          }
         }
       }
       seniorStaff {
@@ -326,6 +337,7 @@ export const PagePartsFragmentDoc = gql`
           image
           imageAlt
           bio
+          authorSlug
         }
       }
     }
@@ -335,6 +347,9 @@ export const PagePartsFragmentDoc = gql`
         eyebrow
         headline
         lede
+        newsroomEmail
+        generalEmail
+        replyTime
       }
       formSection {
         __typename
@@ -343,6 +358,9 @@ export const PagePartsFragmentDoc = gql`
         description
         buttonText
         note
+        goesTo
+        readBy
+        replyWindow
         formAction
         subject
       }

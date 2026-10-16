@@ -54,6 +54,9 @@ fragment BlogParts on Blog {
   heroImage
   authorAlt
   heroImageAlt
+  heroImageCaption
+  correctionDate
+  correctionText
   body
 }
 
@@ -302,6 +305,14 @@ fragment PageParts on Page {
           image
           imageAlt
           bio
+          tagline
+          recordTitle
+          authorSlug
+          records {
+            __typename
+            label
+            value
+          }
         }
       }
       seniorStaff {
@@ -316,6 +327,7 @@ fragment PageParts on Page {
           image
           imageAlt
           bio
+          authorSlug
         }
       }
     }
@@ -325,6 +337,9 @@ fragment PageParts on Page {
         eyebrow
         headline
         lede
+        newsroomEmail
+        generalEmail
+        replyTime
       }
       formSection {
         __typename
@@ -333,6 +348,9 @@ fragment PageParts on Page {
         description
         buttonText
         note
+        goesTo
+        readBy
+        replyWindow
         formAction
         subject
       }

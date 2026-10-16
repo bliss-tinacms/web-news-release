@@ -8,7 +8,7 @@ export const UserCollection: Collection = {
   format: "json",
   ui: {
     router({ document }) {
-      return `/blog/author/${document._sys.filename}/`;
+      return `/author/${document._sys.filename}/`;
     },
   },
   fields: [

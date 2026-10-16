@@ -1,36 +1,50 @@
 ---
-import { tinaField } from '@tinacms/astro/tina-field';
 import { getBlogPermalink } from '../../lib/permalinks';
-import { labelFromReference, getAuthorName, getPostCategories } from './DemoHelpers';
-const { archiveTitle = 'Category', posts = [], currentPage = 1, totalPages = 1, basePath = '/', category = null, showCategoryBadge = true } = Astro.props;
-const lead = posts[0];
-const rest = posts.slice(1);
-const hasPosts = posts.length > 0;
-const hasBottomPosts = rest.length > 0;
-function postUrl(post: any) { const url = getBlogPermalink(post); return url.endsWith('/') ? url : url + '/'; }
-function pagePath(page: number) { return page <= 1 ? basePath + '/' : basePath + '/page/' + page + '/'; }
-const emptyHeadline = hasPosts ? `No more articles in ${archiveTitle} yet.` : `There are no articles published yet under ${archiveTitle}.`;
-const emptyBody = hasPosts
-  ? 'There are no additional articles published yet under this category. Please check back soon for new coverage.'
-  : 'There are no articles published yet under this category. Please check back soon for new coverage.';
+import FormattedDate from '../FormattedDate.astro';
+import { tinaField } from '@tinacms/astro/tina-field';
+
+const { archiveTitle = 'Category', posts = [], currentPage = 1, totalPages = 1, basePath = '/', category = null, totalStories = posts.length } = Astro.props;
+function refs(post: any) {
+  const values = Array.isArray(post?.categories) && post.categories.length ? post.categories.map((item: any) => typeof item === 'string' ? item : item?.category).filter(Boolean) : post?.category ? [post.category] : [];
+  return values;
+}
+function label(reference: any) {
+  if (!reference) return '';
+  if (typeof reference === 'string') return reference.split('/').pop()?.replace(/\.(json|mdx?)$/i, '').replace(/[-_]+/g, ' ') || '';
+  return reference.title || reference.name || reference._sys?.filename || '';
+}
+function postImageAlt(post: any) { return post?.heroImageAlt || post?.title || 'Story image'; }
+function pageHref(page: number) { return page <= 1 ? `${basePath}/` : `${basePath}/page/${page}/`; }
+const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
 ---
 
-<main class="ffn-demo ffn-demo-category">
-  <header class="ch"><div class="w"><div class="ch-in">{showCategoryBadge && <div class="ch-k"><b>Category</b></div>}<h1 data-tina-field={category ? tinaField(category, 'title') : undefined}>{archiveTitle}</h1></div></div></header>
-  {lead && (
-    <section class="ld"><div class="w"><a href={postUrl(lead)} class="ld-a">
-      {lead.heroImage ? <div class="ld-img" style={`background-image:url(${lead.heroImage})`}></div> : <div class="ld-img demo-img"></div>}
-      <div class="ld-c"><span class="ld-k">Lead Story</span><div class="ld-h">{lead.title}</div>{lead.description && <p class="ld-x">{lead.description}</p>}<div class="ld-b">{getAuthorName(lead.author)} · {labelFromReference(getPostCategories(lead), archiveTitle)}</div></div>
-    </a></div></section>
-  )}
-  <section class="lg"><div class="w"><div class="lg-h"><div class="eye"><i></i><span>{hasPosts ? 'Most recent first' : 'No articles yet'}</span></div><div class="h2">{hasPosts ? `More in ${archiveTitle}` : emptyHeadline}</div></div>
-    {hasBottomPosts ? (
-      <div>
-        {rest.map((post: any) => <a href={postUrl(post)} class="si">{post.heroImage ? <img class="si-img" src={post.heroImage} alt="" /> : <div class="si-img demo-img"></div>}<div><div class="si-k">{labelFromReference(getPostCategories(post), archiveTitle)}</div><div class="si-h">{post.title}</div>{post.description && <p class="si-x">{post.description}</p>}<div class="si-b">{getAuthorName(post.author)}</div></div></a>)}
-      </div>
-    ) : (
-      <div class="empty-archive"><p>{emptyBody}</p><a href="/" class="empty-archive__link">Back to the homepage</a></div>
-    )}
+<main class="mockup31-category">
+  <header class="ph">
+    <div class="ph-l">
+      <div class="ph-k">Category archive</div>
+      <h1 data-tina-field={category ? tinaField(category, 'title') : undefined}>{archiveTitle}</h1>
+    </div>
+    <div class="ph-r"><div class="ph-row"><span class="ph-rk">Stories filed</span><span class="ph-rv">{totalStories}</span></div></div>
+  </header>
+  <section class="arch"><div class="w">
+    <div class="eye"><i></i><span>Most recent first</span></div>
+    <div class="lg">
+      {posts.length > 0 ? posts.map((post: any, index: number) => {
+        const categoryLabel = label(refs(post)[0]) || archiveTitle;
+        return <a href={getBlogPermalink(post)} class="lr">
+          <div class="lr-n">{String((currentPage - 1) * 30 + index + 1).padStart(2, '0')}</div>
+          {post.heroImage && <img class="lr-img" src={post.heroImage} alt={postImageAlt(post)} />}
+          <div>
+            <div class="lr-m"><span class="lr-k">{categoryLabel}</span>{post.pubDate && <span class="lr-dt"><FormattedDate date={new Date(post.pubDate)} /></span>}</div>
+            <div class="lr-h">{post.title || 'Untitled story'}</div>
+            {post.description && <p class="lr-x">{post.description}</p>}
+          </div>
+        </a>;
+      }) : <div class="empty-archive"><p>No stories have been filed in this category yet.</p><a class="empty-archive__link" href="/">Read the latest stories</a></div>}
+    </div>
   </div></section>
-  {totalPages > 1 && <nav class="pg" aria-label="Archive pagination"><div class="w"><a class="nx" href={pagePath(Math.max(1,currentPage-1))}>Prev</a>{Array.from({ length: Math.min(totalPages, 4) }).map((_, i) => { const p=i+1; return <a class={p===currentPage?'on':''} href={pagePath(p)}>{p}</a>; })}<span class="gap">…</span><a class="nx" href={pagePath(Math.min(totalPages,currentPage+1))}>Next →</a></div></nav>}
+  {totalPages > 1 && <section class="pg"><div class="pg-in">
+    {pageNumbers.map((page) => <a href={pageHref(page)} class={page === currentPage ? 'on' : undefined} aria-current={page === currentPage ? 'page' : undefined}>{page}</a>)}
+    {currentPage < totalPages && <a href={pageHref(currentPage + 1)} class="nx">Next</a>}
+  </div></section>}
 </main>

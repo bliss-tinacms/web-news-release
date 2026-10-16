@@ -98,6 +98,9 @@ export const BlogCollection: Collection = {
     { name: "heroImage", label: "Hero Image", type: "image" },
     { name: "authorAlt", label: "Author Alt Text", type: "string", description: "Alt text for the author image." },
     { name: "heroImageAlt", label: "Hero Image Alt Text", type: "string", description: "Alt text for the hero image." },
+    { name: "heroImageCaption", label: "Hero Image Caption", type: "string", ui: { component: "textarea" } },
+    { name: "correctionDate", label: "Correction Date", type: "datetime" },
+    { name: "correctionText", label: "Correction Notice", type: "string", ui: { component: "textarea" } },
     { type: "rich-text", name: "body", label: "Body", isBody: true, templates: [youTubeEmbedTemplate] },
   ],
 };
