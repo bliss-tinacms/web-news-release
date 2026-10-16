@@ -3999,7 +3999,7 @@ export const ExperimentalGetTinaClient = () =>
   getSdk(
     generateRequester(
       createClient({
-        url: "https://www.webnewsrelease.com/tina-content-proxy",
+        url: "http://localhost:4001/graphql",
         queries,
       })
     )
@@ -4013,5 +4013,3 @@ export const queries = (
 }
 
 export type { Exact };
-
-  
