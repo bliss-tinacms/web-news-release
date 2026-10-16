@@ -30,7 +30,9 @@ const {
 	nofollow = false,
 	favicon = '/favicon.svg',
 } = Astro.props;
-const configuredSiteUrl = Astro.site || new URL(Astro.url.origin);
+const configuredSiteUrl = Astro.site && !['localhost', '127.0.0.1'].includes(Astro.site.hostname)
+	? Astro.site
+	: new URL(Astro.url.origin);
 function resolveCanonicalUrl(value?: string | URL | null) {
 	const raw = value ? value.toString() : Astro.url.pathname;
 	const url = new URL(raw, configuredSiteUrl);

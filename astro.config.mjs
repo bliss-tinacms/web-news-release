@@ -6,6 +6,12 @@ import icon from 'astro-icon';
 import tina from '@tinacms/astro/integration';
 import { tinaAdminDevRedirect } from '@tinacms/astro/vite';
 import tailwindcss from '@tailwindcss/vite';
+import { loadEnv } from 'vite';
+
+// Astro evaluates this config before it exposes .env values on process.env.
+// Load the shared env explicitly so SITE_URL cannot silently fall through to
+// localhost in a production build.
+const fileEnv = loadEnv(process.env.NODE_ENV || 'development', process.cwd(), '');
 
 // Host-neutral: every content page prerenders to static HTML, and the one
 // on-demand route (/tina-island, the visual-editing endpoint) is served by
@@ -42,7 +48,7 @@ async function getAdapter() {
 // Cloudflare Workers exposes no such var — set SITE_URL there for correct
 // canonicals. Local builds fall back to localhost.
 function getSiteUrl() {
-	if (process.env.SITE_URL) return process.env.SITE_URL;
+	if (process.env.SITE_URL || fileEnv.SITE_URL) return process.env.SITE_URL || fileEnv.SITE_URL;
 	if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
 	if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
 	if (process.env.CF_PAGES_URL) return process.env.CF_PAGES_URL;
