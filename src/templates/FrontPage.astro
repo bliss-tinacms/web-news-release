@@ -28,7 +28,6 @@ const coverage = homepage.coverage ?? {};
 const quote = homepage.quote ?? {};
 const standards = homepage.standards ?? {};
 const team = homepage.team ?? {};
-const cta = homepage.cta ?? {};
 const editHero = editHomepage.hero ?? hero;
 const editLatest = editHomepage.latest ?? latest;
 const editMission = editHomepage.mission ?? mission;
@@ -36,7 +35,6 @@ const editCoverage = editHomepage.coverage ?? coverage;
 const editQuote = editHomepage.quote ?? quote;
 const editStandards = editHomepage.standards ?? standards;
 const editTeam = editHomepage.team ?? team;
-const editCta = editHomepage.cta ?? cta;
 
 function referenceLabel(reference: unknown): string {
   const first = Array.isArray(reference) ? reference[0] : reference;
@@ -160,18 +158,3 @@ const latestStories = latestPosts.length ? latestPosts : (latest.items ?? []);
       })}
     </div>
   </div></section>
-
-  <section class="wfu" aria-labelledby="contribute-title"><div class="w"><div class="wfu-in">
-    <div class="wfu-l">
-      <div class="wfu-k"><i></i><span data-tina-field={tf(editCta, 'eyebrow')}>{cta.eyebrow}</span></div>
-      <h2 id="contribute-title" data-tina-field={tf(editCta, 'title')}>{cta.title}</h2>
-      <p data-tina-field={tf(editCta, 'description')}>{cta.description}</p>
-    </div>
-    <div class="wfu-r">
-      {(cta.points ?? []).map((point: any, index: number) => {
-        const editPoint = editCta?.points?.[index] ?? point;
-        return <div class="wfu-pt"><b data-tina-field={tf(editPoint, 'number')}>{point.number}</b><span data-tina-field={tf(editPoint, 'text')}>{point.text}</span></div>;
-      })}
-      <a href={cta.buttonLink || '#'} class="wfu-btn" data-tina-field={tf(editCta, 'buttonText')}>{cta.buttonText}</a>
-    </div>
-  </div></div></section>

@@ -1,6 +1,8 @@
 ---
 import { tinaField } from '@tinacms/astro/tina-field';
-import { getFooterNavigation, type CmsConfig } from '../lib/data';
+import TinaIsland from '@tinacms/astro/TinaIsland.astro';
+import { getEditablePage, getFooterNavigation, getPublicPage, type CmsConfig } from '../lib/data';
+import FooterCta from './FooterCta.astro';
 
 type NavItem = {
   label?: string | null;
@@ -28,9 +30,16 @@ const footerLogo = seo?.footerLogo || seo?.logo || '';
 const footerDescription = branding?.footerDescription || '';
 const copyright = branding?.copyright || '';
 const footerColumns = ((navigation?.items ?? []) as NavItem[]).filter((item) => item?.label && item?.children?.length);
+const footerPage = await getPublicPage('home');
+const editableFooterPage = await getEditablePage('home');
+const footerPageData = footerPage.data?.page ?? null;
+const editableFooterPageData = editableFooterPage.data?.page ?? footerPageData;
 ---
 
 <footer class="ft" data-brand-footer>
+  <TinaIsland name="footer-cta" wrapper={{ tag: 'div' }} params={{ slug: 'home' }}>
+    <FooterCta data={footerPageData} editData={editableFooterPageData} />
+  </TinaIsland>
   <div class="w"><div class="ft-t">
     {footerLogo
       ? <img src={footerLogo} alt={siteTitle} data-tina-field={seo ? tinaField(seo, 'footerLogo') : undefined} loading="lazy" decoding="async" />

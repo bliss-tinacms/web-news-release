@@ -15,6 +15,7 @@ import AuthorArchiveHeader from '../components/islands/AuthorArchiveHeader.astro
 import CategoryArchiveHeader from '../components/islands/CategoryArchiveHeader.astro';
 import Header from '../templates/Header.astro';
 import Footer from '../templates/Footer.astro';
+import FooterCta from '../templates/FooterCta.astro';
 import { getEditableBlog, getEditableCategory, getEditableConfig, getEditablePage, getEditableUser } from './data';
 
 export const islands: IslandRegistry = {
@@ -76,6 +77,14 @@ export const islands: IslandRegistry = {
 		wrapper: { tag: 'div' },
 		propsFromData: (data) => ({
 			config: (data as QueryResult<ConfigQuery>).data?.config as CmsConfig | undefined,
+		}),
+	},
+	'footer-cta': {
+		fetch: () => getEditablePage('home'),
+		component: FooterCta,
+		wrapper: { tag: 'div' },
+		propsFromData: (data) => ({
+			data: (data as QueryResult<PageQuery>).data?.page as CmsPage | undefined,
 		}),
 	},
 };

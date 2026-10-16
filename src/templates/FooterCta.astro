@@ -1,0 +1,37 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+
+interface Props {
+  data?: any;
+  editData?: any;
+}
+
+const { data, editData } = Astro.props;
+const publicBlocks = Array.isArray(data?.blocks) ? data.blocks : [];
+const editBlocks = Array.isArray(editData?.blocks) ? editData.blocks : [];
+const isHomepage = (block: any) => block?._template === 'homepageTemplate' || block?.__typename === 'PageBlocksHomepageTemplate';
+const homepage = publicBlocks.find(isHomepage) ?? {};
+const editHomepage = editBlocks.find(isHomepage) ?? homepage;
+const cta = homepage.cta ?? {};
+const editCta = editHomepage.cta ?? cta;
+
+function tf(node: any, key: string) {
+  try { return node ? tinaField(node, key) : undefined; }
+  catch { return undefined; }
+}
+---
+
+<section class="wfu" aria-labelledby="contribute-title"><div class="w"><div class="wfu-in">
+  <div class="wfu-l">
+    <div class="wfu-k"><i></i><span data-tina-field={tf(editCta, 'eyebrow')}>{cta.eyebrow}</span></div>
+    <h2 id="contribute-title" data-tina-field={tf(editCta, 'title')}>{cta.title}</h2>
+    <p data-tina-field={tf(editCta, 'description')}>{cta.description}</p>
+  </div>
+  <div class="wfu-r">
+    {(cta.points ?? []).map((point: any, index: number) => {
+      const editPoint = editCta?.points?.[index] ?? point;
+      return <div class="wfu-pt"><b data-tina-field={tf(editPoint, 'number')}>{point.number}</b><span data-tina-field={tf(editPoint, 'text')}>{point.text}</span></div>;
+    })}
+    <a href={cta.buttonLink || '#'} class="wfu-btn" data-tina-field={tf(editCta, 'buttonText')}>{cta.buttonText}</a>
+  </div>
+</div></div></section>
