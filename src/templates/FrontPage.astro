@@ -1,5 +1,6 @@
 ---
 import { tinaField } from '@tinacms/astro/tina-field';
+import { getBlogPermalink } from '../lib/permalinks';
 
 interface Props {
   posts?: unknown[];
@@ -8,7 +9,7 @@ interface Props {
   editData?: any;
 }
 
-const { data, editData } = Astro.props;
+const { posts = [], data, editData } = Astro.props;
 const publicBlocks = Array.isArray(data?.blocks) ? data.blocks : [];
 const editBlocks = Array.isArray(editData?.blocks) ? editData.blocks : [];
 const isHomepage = (block: any) => block?._template === 'homepageTemplate' || block?.__typename === 'PageBlocksHomepageTemplate';
@@ -36,9 +37,42 @@ const editQuote = editHomepage.quote ?? quote;
 const editStandards = editHomepage.standards ?? standards;
 const editTeam = editHomepage.team ?? team;
 const editCta = editHomepage.cta ?? cta;
+
+function referenceLabel(reference: unknown): string {
+  const first = Array.isArray(reference) ? reference[0] : reference;
+  if (!first) return 'NEWS';
+  if (typeof first === 'string') {
+    const value = first.split('/').pop()?.replace(/\.(json|mdx?)$/i, '').replace(/-/g, ' ') || 'NEWS';
+    return value.replace(/\b\w/g, (letter) => letter.toUpperCase());
+  }
+  if (typeof first === 'object') {
+    const item = first as any;
+    return item.title || item.name || item.category?.title || item.category?.name || referenceLabel(item.category);
+  }
+  return 'NEWS';
+}
+
+function storyDate(value: unknown) {
+  if (!value) return '';
+  const date = new Date(String(value));
+  return Number.isNaN(date.valueOf())
+    ? ''
+    : new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }).format(date);
+}
+
+const latestPosts = (Array.isArray(posts) ? posts : []).slice(0, 3).map((post: any) => ({
+  source: post,
+  link: getBlogPermalink(post),
+  image: post.heroImage || '/placeholder.jpg',
+  imageAlt: post.heroImageAlt || post.title || 'Article image',
+  category: referenceLabel(post.categories),
+  meta: storyDate(post.pubDate || post.updatedDate),
+  title: post.title || 'Untitled story',
+  description: post.description || 'Read the full report.',
+}));
+const latestStories = latestPosts.length ? latestPosts : (latest.items ?? []);
 ---
 
-<main>
   <section class="hero" aria-labelledby="home-hero-title">
     <div class="hero-panel">
       <span class="hero-tag" data-tina-field={tf(editHero, 'tag')}>{hero.tag}</span>
@@ -53,8 +87,8 @@ const editCta = editHomepage.cta ?? cta;
   <section class="fd" aria-labelledby="latest-stories-title"><div class="w">
     <div class="fd-h"><b id="latest-stories-title" data-tina-field={tf(editLatest, 'title')}>{latest.title}</b><span data-tina-field={tf(editLatest, 'updatedLabel')}>{latest.updatedLabel}</span></div>
     <div class="fd-g">
-      {(latest.items ?? []).map((item: any, index: number) => {
-        const editItem = editLatest?.items?.[index] ?? item;
+      {latestStories.map((item: any, index: number) => {
+        const editItem = item.source ?? editLatest?.items?.[index] ?? item;
         return <a href={item.link || '#'} class="fdi">
           <div class="fdi-img" role="img" aria-label={item.imageAlt || ''} style={item.image ? `background-image:url('${item.image}')` : undefined} data-tina-field={tf(editItem, 'image')}></div>
           <div class="fdi-c">
@@ -141,4 +175,3 @@ const editCta = editHomepage.cta ?? cta;
       <a href={cta.buttonLink || '#'} class="wfu-btn" data-tina-field={tf(editCta, 'buttonText')}>{cta.buttonText}</a>
     </div>
   </div></div></section>
-</main>

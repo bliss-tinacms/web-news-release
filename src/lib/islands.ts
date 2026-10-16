@@ -18,6 +18,14 @@ import Footer from '../templates/Footer.astro';
 import { getEditableBlog, getEditableCategory, getEditableConfig, getEditablePage, getEditableUser } from './data';
 
 export const islands: IslandRegistry = {
+	home: {
+		fetch: () => getEditablePage('home'),
+		component: PageBody,
+		wrapper: { tag: 'main', className: 'sc-host' },
+		propsFromData: (data) => ({
+			data: (data as QueryResult<PageQuery>).data?.page as CmsPage | undefined,
+		}),
+	},
 	page: {
 		fetch: (_request, params) => getEditablePage(params.get('slug') ?? 'home'),
 		component: PageBody,
