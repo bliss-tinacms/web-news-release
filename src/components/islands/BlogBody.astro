@@ -7,6 +7,7 @@ import { tinaField } from '@tinacms/astro/tina-field';
 import type { CmsBlog } from '../../lib/data';
 import FormattedDate from '../FormattedDate.astro';
 import { mdxComponents } from '../mdx/components';
+import EmailLink from '../ui/EmailLink.astro';
 
 interface Props {
   data?: CmsBlog | null;
@@ -72,7 +73,6 @@ const heroImageAlt = (data as any)?.heroImageAlt || data?.title || 'Article lead
         <div class="ah-by">
           <div><span class="ah-bk">Written by</span><span class="ah-bv" data-tina-field={tinaField(data, 'author')}><a href={authorArchiveUrl}>{authorName}</a></span></div>
           <div><span class="ah-bk">Published</span><span class="ah-bv" data-tina-field={tinaField(data, 'pubDate')}><FormattedDate date={publishedDate} /></span></div>
-          <div><span class="ah-bk">Updated</span><span class="ah-bv" data-tina-field={tinaField(data, 'updatedDate')}>{data.updatedDate ? <FormattedDate date={new Date(data.updatedDate)} /> : '—'}</span></div>
           {categories.length > 0 && (
             <div><span class="ah-bk">Category</span><span class="ah-bv" data-tina-field={tinaField(data, 'categories')}>
               {categories.map((category, index) => <>{index > 0 && ', '}<a href={`/${category.slug}/`}>{category.label}</a></>)}
@@ -114,7 +114,7 @@ const heroImageAlt = (data as any)?.heroImageAlt || data?.title || 'Article lead
             <p class="egc-x">Sourcing, attribution, anonymity, labelling, and the corrections process, set out in full.</p>
             <span class="egc-b">Editorial guidelines <i>→</i></span>
           </a>
-          <div class="rnote"><p>Corrections to this piece go to editorial@webnewsrelease.com. Include the URL, the specific error, and the correct information.</p></div>
+          <div class="rnote"><p>Corrections to this piece go to <EmailLink email="editorial@webnewsrelease.com" />. Include the URL, the specific error, and the correct information.</p></div>
         </aside>
       </div>
     </div>

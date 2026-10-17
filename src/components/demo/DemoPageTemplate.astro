@@ -4,6 +4,7 @@ import { tinaField } from '@tinacms/astro/tina-field';
 import { mdxComponents } from '../mdx/components';
 import DemoPageLead from './DemoPageLead.astro';
 import DemoPageList from './DemoPageList.astro';
+import EmailLinksScript from '../ui/EmailLinksScript.astro';
 
 const { data } = Astro.props;
 const contentBlock = Array.isArray(data?.blocks)
@@ -23,9 +24,19 @@ function fragment(nodes: any[]) { return body && typeof body === 'object' ? { ..
 const leadComponents = { ...mdxComponents, p: DemoPageLead, ul: DemoPageList };
 const pageComponents = { ...mdxComponents, ul: DemoPageList };
 function esc(value: string) { return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function emailAnchor(value: string) {
+  const normalized = value.replace(/^mailto\\:/i, 'mailto:');
+  if (!normalized.toLowerCase().startsWith('mailto:')) return '';
+  const address = normalized.slice(7).split('?')[0];
+  const at = address.indexOf('@');
+  if (at <= 0) return '';
+  const local = esc(address.slice(0, at));
+  const domain = esc(address.slice(at + 1));
+  return `<a data-mailto-local="${local}" data-mailto-domain="${domain}"><span>${local}</span><span>@</span><span>${domain}</span></a>`;
+}
 function inline(value: string) {
   return esc(value)
-    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]+)\)/g, '<a href="$2">$1</a>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]+|mailto\\?:[^\s)]+)\)/g, (_match, label, href) => emailAnchor(href) || `<a href="${href}">${label}</a>`)
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>');
 }
@@ -59,4 +70,5 @@ for (let index = 1; index < stringGroups.length; index += 2) stringSections.push
       <section class="sec"><TinaMarkdown content={body} components={pageComponents} /></section>
     ) : null}
   </div></div>
+  <EmailLinksScript />
 </main>

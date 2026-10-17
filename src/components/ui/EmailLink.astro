@@ -1,0 +1,28 @@
+---
+import EmailLinksScript from './EmailLinksScript.astro';
+
+interface Props {
+  email?: string | null;
+  url?: string | null;
+  class?: string;
+}
+
+const { email: emailProp, url, class: className } = Astro.props;
+const rawUrl = typeof url === 'string' ? url.trim() : '';
+const rawEmail = typeof emailProp === 'string' ? emailProp.trim() : '';
+const mailtoValue = rawEmail || (rawUrl.toLowerCase().startsWith('mailto:') ? rawUrl.slice(7).split('?')[0] : '');
+const at = mailtoValue.indexOf('@');
+const email = at > 0 ? {
+  local: mailtoValue.slice(0, at),
+  domain: mailtoValue.slice(at + 1),
+} : null;
+---
+
+{email ? (
+  <a class={className} data-mailto-local={email.local} data-mailto-domain={email.domain}>
+    <span>{email.local}</span><span>@</span><span>{email.domain}</span>
+  </a>
+) : (
+  <a class={className} href={rawUrl || undefined}><slot /></a>
+)}
+<EmailLinksScript />

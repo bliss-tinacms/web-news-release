@@ -2,6 +2,7 @@
 import { getBlogPermalink } from '../../lib/permalinks';
 import FormattedDate from '../FormattedDate.astro';
 import { tinaField } from '@tinacms/astro/tina-field';
+import EmailLink from '../ui/EmailLink.astro';
 
 const { archiveTitle = 'Author', author = null, posts = [], currentPage = 1, totalPages = 1, basePath = '/', totalStories = posts.length } = Astro.props;
 function refs(post: any) {
@@ -26,7 +27,7 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
     <div class="ph-r">
       {author?.role && <div class="ph-row"><span class="ph-rk">Desk</span><span class="ph-rv" data-tina-field={tinaField(author, 'role')}>{author.role}</span></div>}
       <div class="ph-row"><span class="ph-rk">Stories</span><span class="ph-rv">{totalStories}</span></div>
-      {author?.email && <div class="ph-row"><span class="ph-rk">Contact</span><span class="ph-rv" data-tina-field={tinaField(author, 'email')}>{author.email}</span></div>}
+      {author?.email && <div class="ph-row"><span class="ph-rk">Contact</span><span class="ph-rv" data-tina-field={tinaField(author, 'email')}><EmailLink email={author.email} /></span></div>}
     </div>
   </header>
   {(author?.avatar || author?.bio) && <section class="bio"><div class="w"><div class="bio-in">

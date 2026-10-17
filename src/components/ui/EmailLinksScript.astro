@@ -1,0 +1,11 @@
+<script>
+  function activateEmailLinks() {
+    document.querySelectorAll<HTMLElement>('[data-mailto-local][data-mailto-domain]').forEach((link) => {
+      const local = link.dataset.mailtoLocal;
+      const domain = link.dataset.mailtoDomain;
+      if (local && domain) link.setAttribute('href', `mailto:${local}@${domain}`);
+    });
+  }
+  activateEmailLinks();
+  document.addEventListener('astro:page-load', activateEmailLinks);
+</script>
