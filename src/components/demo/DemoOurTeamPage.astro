@@ -5,7 +5,6 @@ const block = Array.isArray(data?.blocks) ? data.blocks.find((item: any) => item
 const hero = block?.hero || {};
 const leaders = Array.isArray(block?.leadership?.people) ? block.leadership.people : [];
 const staff = Array.isArray(block?.seniorStaff?.people) ? block.seniorStaff.people : [];
-function archiveUrl(person: any) { return person?.authorSlug ? `/author/${String(person.authorSlug).replace(/^\/+|\/+$/g, '')}/` : '#'; }
 ---
 
 <main class="mockup31-team">
@@ -41,11 +40,11 @@ function archiveUrl(person: any) { return person?.authorSlug ? `/author/${String
   </div></section>
   <section class="desk"><div class="w">
     <div class="desk-h"><div><div class="eye"><i></i><span data-tina-field={block?.seniorStaff ? tinaField(block.seniorStaff, 'eyebrow') : undefined}>{block?.seniorStaff?.eyebrow}</span></div><div class="h2" data-tina-field={block?.seniorStaff ? tinaField(block.seniorStaff, 'title') : undefined}>{block?.seniorStaff?.title}</div></div></div>
-    {staff.map((person: any, index: number) => <a href={archiveUrl(person)} class="dr" data-tina-field={tinaField(block.seniorStaff.people, index)}>
+    {staff.map((person: any, index: number) => <div class="dr" data-tina-field={tinaField(block.seniorStaff.people, index)}>
       <div class="dr-n">{String(leaders.length + index + 1).padStart(2, '0')}</div>
       {person.image && <img class="dr-img" src={person.image} alt={person.imageAlt || person.name || ''} />}
       <div><div class="dr-nm">{person.name}</div><div class="dr-r">{[person.role, person.location].filter(Boolean).join(' · ')}</div></div>
       <p class="dr-x">{person.bio}</p>
-    </a>)}
+    </div>)}
   </div></section>
 </main>

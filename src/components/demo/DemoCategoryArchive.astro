@@ -40,7 +40,14 @@ const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
             {post.description && <p class="lr-x">{post.description}</p>}
           </div>
         </a>;
-      }) : <div class="empty-archive"><p>No stories have been filed in this category yet.</p><a class="empty-archive__link" href="/">Read the latest stories</a></div>}
+      }) : <div class="lr empty-archive">
+        <div class="lr-n">—</div>
+        <div>
+          <div class="lr-m"><span class="lr-k">{archiveTitle}</span></div>
+          <div class="lr-h">No stories have been filed in this category yet.</div>
+          <p class="lr-x"><a class="empty-archive__link" href="/">Read the latest stories</a></p>
+        </div>
+      </div>}
     </div>
   </div></section>
   {totalPages > 1 && <section class="pg"><div class="pg-in">

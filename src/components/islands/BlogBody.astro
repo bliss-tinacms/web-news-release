@@ -72,7 +72,7 @@ const heroImageAlt = (data as any)?.heroImageAlt || data?.title || 'Article lead
         <div class="ah-by">
           <div><span class="ah-bk">Written by</span><span class="ah-bv" data-tina-field={tinaField(data, 'author')}><a href={authorArchiveUrl}>{authorName}</a></span></div>
           <div><span class="ah-bk">Published</span><span class="ah-bv" data-tina-field={tinaField(data, 'pubDate')}><FormattedDate date={publishedDate} /></span></div>
-          {data.updatedDate && <div><span class="ah-bk">Updated</span><span class="ah-bv" data-tina-field={tinaField(data, 'updatedDate')}><FormattedDate date={new Date(data.updatedDate)} /></span></div>}
+          <div><span class="ah-bk">Updated</span><span class="ah-bv" data-tina-field={tinaField(data, 'updatedDate')}>{data.updatedDate ? <FormattedDate date={new Date(data.updatedDate)} /> : '—'}</span></div>
           {categories.length > 0 && (
             <div><span class="ah-bk">Category</span><span class="ah-bv" data-tina-field={tinaField(data, 'categories')}>
               {categories.map((category, index) => <>{index > 0 && ', '}<a href={`/${category.slug}/`}>{category.label}</a></>)}
