@@ -49,11 +49,11 @@ for (let index = 1; index < stringGroups.length; index += 2) stringSections.push
   </header>
   <div class="w"><div class="doc" data-tina-field={contentBlock ? tinaField(contentBlock, 'body') : undefined}>
     {typeof body === 'string' ? <>
-      {stringLead && <div class="lead" set:html={renderBlocks(stringLead)} />}
+      {stringLead && <><div class="lead" set:html={renderBlocks(stringLead)} /><div style="height:38px"></div></>}
       {stringSections.map((section) => <section class="sec"><h2>{section.heading}</h2><Fragment set:html={renderBlocks(section.body)} /></section>)}
     </> : groups.length > 0 ? groups.map((group, index) => (
       index === 0 && group[0]?.type !== 'h2'
-        ? <TinaMarkdown content={fragment(group)} components={leadComponents} />
+        ? <><TinaMarkdown content={fragment(group)} components={leadComponents} /><div style="height:38px"></div></>
         : <section class="sec"><TinaMarkdown content={fragment(group)} components={pageComponents} /></section>
     )) : body ? (
       <section class="sec"><TinaMarkdown content={body} components={pageComponents} /></section>

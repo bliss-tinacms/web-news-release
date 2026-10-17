@@ -5,6 +5,13 @@ const block = Array.isArray(data?.blocks) ? data.blocks.find((item: any) => item
 const hero = block?.hero || {};
 const form = block?.formSection || {};
 const hasAction = typeof form.formAction === 'string' && form.formAction.trim().length > 0;
+function emailParts(value: unknown) {
+  const email = typeof value === 'string' ? value.trim() : '';
+  const at = email.indexOf('@');
+  return at > 0 ? { local: email.slice(0, at), domain: email.slice(at + 1) } : null;
+}
+const newsroomEmail = emailParts(hero.newsroomEmail);
+const generalEmail = emailParts(hero.generalEmail);
 ---
 
 <main class="mockup31-contact">
@@ -15,8 +22,8 @@ const hasAction = typeof form.formAction === 'string' && form.formAction.trim().
       <p class="ph-d" data-tina-field={hero ? tinaField(hero, 'lede') : undefined}>{hero.lede}</p>
     </div>
     <div class="ph-r">
-      <div class="ph-row"><span class="ph-rk">Newsroom</span><span class="ph-rv" data-tina-field={hero ? tinaField(hero, 'newsroomEmail') : undefined}>{hero.newsroomEmail}</span></div>
-      <div class="ph-row"><span class="ph-rk">General</span><span class="ph-rv" data-tina-field={hero ? tinaField(hero, 'generalEmail') : undefined}>{hero.generalEmail}</span></div>
+      <div class="ph-row"><span class="ph-rk">Newsroom</span><span class="ph-rv" data-tina-field={hero ? tinaField(hero, 'newsroomEmail') : undefined}>{newsroomEmail ? <><span>{newsroomEmail.local}</span><span>@</span><span>{newsroomEmail.domain}</span></> : hero.newsroomEmail}</span></div>
+      <div class="ph-row"><span class="ph-rk">General</span><span class="ph-rv" data-tina-field={hero ? tinaField(hero, 'generalEmail') : undefined}>{generalEmail ? <><span>{generalEmail.local}</span><span>@</span><span>{generalEmail.domain}</span></> : hero.generalEmail}</span></div>
       <div class="ph-row"><span class="ph-rk">Typical reply</span><span class="ph-rv" data-tina-field={hero ? tinaField(hero, 'replyTime') : undefined}>{hero.replyTime}</span></div>
     </div>
   </header>
