@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify Starter Site sitemap dynamic data + SEO output.
+"""Verify Web News Release sitemap dynamic data + SEO output.
 
 Guard for the /sitemap/ route: compares Tina backend page/post collections to
 live public sitemap DOM and checks SEO/meta output. This prevents the sitemap
@@ -101,16 +101,27 @@ def with_slash(value: str) -> str:
     return value if value.endswith("/") else value + "/"
 
 
+def clean_slug(value: object) -> str:
+    raw = normalize(value).lower()
+    raw = re.sub(r"^https?://[^/]+/", "", raw)
+    raw = raw.split("?", 1)[0].split("#", 1)[0].replace("\\", "/").strip("/")
+    return "/".join(
+        filter(None, (re.sub(r"[^a-z0-9]+", "-", part).strip("-") for part in raw.split("/")))
+    )
+
+
 def page_url(node: dict) -> str:
     filename = node.get("_sys", {}).get("filename") or ""
     if filename == "home":
         return "/"
-    permalink = node.get("permalink") or filename
+    permalink = clean_slug(node.get("permalink") or filename)
     return with_slash(permalink)
 
 
 def post_url(node: dict) -> str:
-    permalink = node.get("permalink") or node.get("_sys", {}).get("filename") or ""
+    permalink = clean_slug(node.get("permalink") or node.get("_sys", {}).get("filename") or "")
+    if permalink.startswith("blog/"):
+        permalink = permalink[5:]
     return with_slash(permalink)
 
 
@@ -135,15 +146,15 @@ def main() -> int:
     for node in backend_pages:
         filename = node.get("_sys", {}).get("filename") or ""
         url = page_url(node)
-        if filename in {"404", "sitemap"} or url == "/sitemap/" or node.get("seo", {}).get("noindex"):
+        if filename in {"404", "sitemap"} or url == "/sitemap/" or (node.get("seo") or {}).get("noindex"):
             continue
-        expected_pages.append((url, normalize(node.get("title") or node.get("seo", {}).get("metaTitle") or filename)))
+        expected_pages.append((url, normalize(node.get("title") or (node.get("seo") or {}).get("metaTitle") or filename)))
 
     expected_posts = []
     for node in backend_posts:
-        if node.get("seo", {}).get("noindex"):
+        if (node.get("seo") or {}).get("noindex"):
             continue
-        expected_posts.append((post_url(node), normalize(node.get("title") or node.get("seo", {}).get("metaTitle") or node.get("_sys", {}).get("filename"))))
+        expected_posts.append((post_url(node), normalize(node.get("title") or (node.get("seo") or {}).get("metaTitle") or node.get("_sys", {}).get("filename"))))
 
     html = requests.get(f"{SITE}/sitemap/?v=sitemap-dynamic-verify", headers={"Cache-Control": "no-cache", "User-Agent": "HermesSitemapVerify"}, timeout=30).text
     parser = LinkCollector()
@@ -160,15 +171,15 @@ def main() -> int:
         if (url, text) not in live_links:
             failures.append(f"missing post link {url} {text!r}")
 
-    if "Sitemap | Starter Site" not in normalize(parser.title_text):
+    if "Sitemap | Web News Release" not in normalize(parser.title_text):
         failures.append(f"bad <title>: {parser.title_text!r}")
-    if "Browse the public pages and latest reporting published by Starter Site." not in parser.meta.get("description", ""):
+    if "Browse the public pages and latest reporting published by Web News Release." not in parser.meta.get("description", ""):
         failures.append("missing sitemap meta description")
-    if "ffn-demo-sitemap" not in html or "sitemap-panel" not in html or "Big Shoulders Display" not in html:
-        failures.append("missing Starter Site sitemap branding markers")
+    if "wnr-sitemap" not in html or "sm-panel" not in html or "sm-hero__stats" not in html:
+        failures.append("missing Web News Release sitemap branding markers")
     if f">{len(expected_pages)}<" not in html or f">{len(expected_posts)}<" not in html:
         failures.append("dynamic page/post counts not rendered")
-    if "Tina content collections" not in live_text:
+    if "live content collections" not in live_text:
         failures.append("dynamic source note missing")
 
     print("BACKEND_PAGE_COUNT", len(expected_pages))

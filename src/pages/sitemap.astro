@@ -72,8 +72,6 @@ const postLinks: SitemapPostLink[] = (posts as any[])
   .sort((a: SitemapPostLink, b: SitemapPostLink) => Number(b.date || 0) - Number(a.date || 0));
 
 const totalLinks = pageLinks.length + postLinks.length;
-const latestPost = postLinks[0] ?? null;
-const updated = new Date();
 ---
 
 <Base
@@ -83,82 +81,77 @@ const updated = new Date();
   ogDescription={description}
   canonicalUrl="/sitemap/"
 >
-  <main class="ffn-demo ffn-demo-sitemap" aria-labelledby="sitemap-title">
-    <header class="ph sitemap-ph">
-      <div class="w">
-        <div class="ph-in sitemap-ph__in">
-          <div class="ph-k"><b>Site index</b></div>
-          <h1 id="sitemap-title">Sitemap</h1>
-          <p class="ph-d">A clean index of Web News Release public pages and published reporting, pulled dynamically from the Tina content collections.</p>
-          <div class="sitemap-metrics" aria-label="Sitemap totals">
-            <span><strong>{pageLinks.length}</strong> Pages</span>
-            <span><strong>{postLinks.length}</strong> Stories</span>
-            <span><strong>{totalLinks}</strong> Total links</span>
-          </div>
-        </div>
+  <main class="wnr-sitemap" aria-labelledby="sitemap-title">
+    <header class="sm-hero">
+      <div class="sm-hero__main">
+        <span class="sm-kicker">Site directory</span>
+        <h1 id="sitemap-title">Sitemap</h1>
+        <p>Find every public page and the latest published reporting from Web News Release. This directory updates automatically with the live content collections.</p>
+      </div>
+      <div class="sm-hero__stats" aria-label="Sitemap totals">
+        <div><strong>{pageLinks.length}</strong><span>Public pages</span></div>
+        <div><strong>{postLinks.length}</strong><span>Published stories</span></div>
+        <div><strong>{totalLinks}</strong><span>Total links</span></div>
       </div>
     </header>
 
-    <section class="sc sitemap-intro">
-      <div class="w sitemap-intro__grid">
+    <section class="sm-overview" aria-labelledby="sitemap-overview-title">
+      <div class="sm-wrap sm-overview__inner">
         <div>
-          <div class="eye"><i></i><span>Dynamic directory</span></div>
-          <h2 class="h2">Pages and reporting from the live backend</h2>
+          <span class="sm-eyebrow"><i></i>Live site index</span>
+          <h2 id="sitemap-overview-title">Everything published, in one place.</h2>
         </div>
-        <div class="sitemap-note">
-          <p>This sitemap uses the same Tina-backed page and post loaders as the public website. When editors publish or hide pages and stories, this index follows the live content data.</p>
-          <p class="sitemap-note__meta">Last checked by the page render: <time datetime={updated.toISOString()}>{updated.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</time>{latestPost ? ` · Latest story: ${latestPost.title}` : ''}</p>
-        </div>
+        <p>The lists below use the same Tina-backed page and story data as the rest of the website. Published content appears here automatically, while drafts and pages marked noindex stay out.</p>
       </div>
     </section>
 
-    <section class="sc alt sitemap-directory">
-      <div class="w sitemap-grid">
-        <section class="sitemap-panel" aria-labelledby="sitemap-pages-title">
-          <div class="sitemap-panel__top">
-            <span>Pages</span>
+    <section class="sm-directory" aria-label="Website directory">
+      <div class="sm-wrap">
+        <section class="sm-panel" aria-labelledby="sitemap-pages-title">
+          <header class="sm-panel__header">
+            <div>
+              <span class="sm-panel__kicker">Browse the publication</span>
+              <h2 id="sitemap-pages-title">Website pages</h2>
+            </div>
             <b>{pageLinks.length} links</b>
-          </div>
-          <div class="sitemap-panel__body">
-            <div class="eye"><i></i><span>Public pages</span></div>
-            <h2 id="sitemap-pages-title" class="h2">Website pages</h2>
-            {pageLinks.length > 0 ? (
-              <ul class="sitemap-list">
-                {pageLinks.map((item: SitemapLink, index: number) => (
-                  <li>
-                    <span class="sitemap-list__number">{String(index + 1).padStart(2, '0')}</span>
-                    <a href={item.url}>{item.title}</a>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p class="sitemap-empty">No public pages found.</p>
-            )}
-          </div>
+          </header>
+          {pageLinks.length > 0 ? (
+            <ol class="sm-page-grid">
+              {pageLinks.map((item: SitemapLink, index: number) => (
+                <li>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <a href={item.url}>{item.title}</a>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <p class="sm-empty">No public pages found.</p>
+          )}
         </section>
 
-        <section class="sitemap-panel" aria-labelledby="sitemap-posts-title">
-          <div class="sitemap-panel__top">
-            <span>Stories</span>
+        <section class="sm-panel sm-panel--stories" aria-labelledby="sitemap-posts-title">
+          <header class="sm-panel__header">
+            <div>
+              <span class="sm-panel__kicker">From the newsroom</span>
+              <h2 id="sitemap-posts-title">Latest stories</h2>
+            </div>
             <b>{postLinks.length} links</b>
-          </div>
-          <div class="sitemap-panel__body">
-            <div class="eye"><i></i><span>Published reporting</span></div>
-            <h2 id="sitemap-posts-title" class="h2">Latest stories</h2>
-            {postLinks.length > 0 ? (
-              <ul class="sitemap-list sitemap-list--posts">
-                {postLinks.map((item: SitemapPostLink, index: number) => (
-                  <li>
-                    <span class="sitemap-list__number">{String(index + 1).padStart(2, '0')}</span>
+          </header>
+          {postLinks.length > 0 ? (
+            <ol class="sm-story-list">
+              {postLinks.map((item: SitemapPostLink, index: number) => (
+                <li>
+                  <span class="sm-story-list__number">{String(index + 1).padStart(2, '0')}</span>
+                  <div>
                     <a href={item.url}>{item.title}</a>
-                    {item.date && <time datetime={item.date.toISOString()}>{item.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</time>}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p class="sitemap-empty">No published stories found.</p>
-            )}
-          </div>
+                    {item.date && <time datetime={item.date.toISOString()}>{item.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</time>}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <p class="sm-empty">No published stories found.</p>
+          )}
         </section>
       </div>
     </section>

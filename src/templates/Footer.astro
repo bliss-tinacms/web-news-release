@@ -29,6 +29,16 @@ const siteTitle = seo?.title || '';
 const footerLogo = seo?.footerLogo || seo?.logo || '';
 const footerDescription = branding?.footerDescription || '';
 const copyright = branding?.copyright || '';
+const currentYear = new Date().getFullYear();
+const dynamicCopyright = (() => {
+  const value = String(copyright || '').trim();
+  if (!value) return `© ${currentYear} ${siteTitle}. All rights reserved.`;
+  if (/\b(?:19|20)\d{2}\b/.test(value)) {
+    return value.replace(/\b(?:19|20)\d{2}\b/g, String(currentYear));
+  }
+  if (value.startsWith('©')) return value.replace(/^©\s*/, `© ${currentYear} `);
+  return `© ${currentYear} ${value}`;
+})();
 const footerColumns = ((navigation?.items ?? []) as NavItem[]).filter((item) => item?.label && item?.children?.length);
 const footerPage = await getPublicPage('home');
 const editableFooterPage = await getEditablePage('home');
@@ -54,5 +64,5 @@ const editableFooterPageData = editableFooterPage.data?.page ?? footerPageData;
       </div>
     ))}
   </div></div>
-  <div class="w"><div class="ft-b"><p data-tina-field={branding ? tinaField(branding, 'copyright') : undefined}>{copyright}</p></div></div>
+  <div class="w"><div class="ft-b"><p data-tina-field={branding ? tinaField(branding, 'copyright') : undefined}>{dynamicCopyright}</p></div></div>
 </footer>
