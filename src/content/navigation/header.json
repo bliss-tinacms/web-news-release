@@ -1,12 +1,33 @@
 {
   "title": "Header Navigation",
   "items": [
-    { "label": "Current Events", "href": "/featured/" },
-    { "label": "Business", "href": "/business/" },
-    { "label": "Science", "href": "/health/" },
-    { "label": "Health", "href": "/health/" },
-    { "label": "Travel", "href": "/lifestyle/" },
-    { "label": "Home & Living", "href": "/lifestyle/" },
-    { "label": "Technology", "href": "/technology/" }
+    {
+      "label": "Current Events [NAVIGATION-MVCQ833M]",
+      "href": "/featured/"
+    },
+    {
+      "label": "Business",
+      "href": "/business/"
+    },
+    {
+      "label": "Science",
+      "href": "/health/"
+    },
+    {
+      "label": "Health",
+      "href": "/health/"
+    },
+    {
+      "label": "Travel",
+      "href": "/lifestyle/"
+    },
+    {
+      "label": "Home & Living",
+      "href": "/lifestyle/"
+    },
+    {
+      "label": "Technology",
+      "href": "/technology/"
+    }
   ]
 }
