@@ -18,7 +18,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "permalink:sync": "node scripts/sync-permalinks-to-filenames.mjs",
-    "permalink:watch": "node scripts/watch-permalinks-to-filenames.mjs"
+    "permalink:watch": "node scripts/watch-permalinks-to-filenames.mjs",
+    "verify:tina-fullcheck": "python3 scripts/tina-fullcheck.py"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.7.0",

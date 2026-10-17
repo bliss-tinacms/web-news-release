@@ -15,9 +15,11 @@ if (!data) return new Response('Not Found', { status: 404 });
 const config = (await getConfig()).data?.config ?? null;
 const posts = await listBlogs();
 const sourceHome = localHome.frontmatter as any;
-const seo = sourceHome?.seo ?? data.seo ?? null;
-const title = seo?.metaTitle || sourceHome?.seoTitle || data.seoTitle || config?.seo?.title || 'Harbor Post';
-const description = seo?.metaDescription || config?.seo?.description || 'Independent local reporting for the harbor counties.';
+// Saved Tina data is authoritative. The imported MDX is an outage fallback only;
+// putting it first makes the public <head> permanently stale after an admin save.
+const seo = data.seo ?? sourceHome?.seo ?? null;
+const title = seo?.metaTitle || data.seoTitle || sourceHome?.seoTitle || config?.seo?.title || 'Web News Release';
+const description = seo?.metaDescription || config?.seo?.description || 'Stay informed with Web News Release.';
 ---
 
 <Base
