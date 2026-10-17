@@ -717,7 +717,7 @@
   .mockup31-team .lp-f{padding:24px 20px}
   .mockup31-team .dr{grid-template-columns:minmax(0,1fr);gap:10px;padding:22px 0}
   .mockup31-team .dr:hover{padding-left:0}
-  .mockup31-team .dr-img{width:100%;height:auto;aspect-ratio:3/2}
+  .mockup31-team .dr-img{width:100%;height:auto;aspect-ratio:auto;object-fit:contain;object-position:center}
   .mockup31-team .dr-n{text-align:left}
   .mockup31-team .wfu-l,.mockup31-team .wfu-r{padding:34px 22px}
   .mockup31-team .wfu-l h2{font-size:25px}
