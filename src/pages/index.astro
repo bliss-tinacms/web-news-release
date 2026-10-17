@@ -4,7 +4,6 @@ import TinaIsland from '@tinacms/astro/TinaIsland.astro';
 import FrontPage from '../templates/FrontPage.astro';
 import { getConfig, getEditablePage, getPublicPage, listBlogs } from '../lib/data';
 import { islands } from '../lib/islands';
-import * as localHome from '../content/page/home.mdx';
 
 const slug = 'home';
 const page = await getPublicPage(slug);
@@ -14,11 +13,11 @@ const editData = editPage.data?.page ?? data;
 if (!data) return new Response('Not Found', { status: 404 });
 const config = (await getConfig()).data?.config ?? null;
 const posts = await listBlogs();
-const sourceHome = localHome.frontmatter as any;
-// Saved Tina data is authoritative. The imported MDX is an outage fallback only;
-// putting it first makes the public <head> permanently stale after an admin save.
-const seo = data.seo ?? sourceHome?.seo ?? null;
-const title = seo?.metaTitle || data.seoTitle || sourceHome?.seoTitle || config?.seo?.title || 'Web News Release';
+// getPublicPage() already owns the Tina Cloud → Git → deployed-file fallback chain.
+// The homepage must consume that resolved data directly so no bundled MDX snapshot
+// can override a later admin save.
+const seo = data.seo ?? null;
+const title = seo?.metaTitle || data.seoTitle || config?.seo?.title || 'Web News Release';
 const description = seo?.metaDescription || config?.seo?.description || 'Stay informed with Web News Release.';
 ---
 
