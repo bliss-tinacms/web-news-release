@@ -21,7 +21,7 @@
 .wnr-sitemap .sm-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:15px;font-family:var(--sm-mono);font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--sm-muted)}
 .wnr-sitemap .sm-eyebrow i{display:block;width:27px;height:3px;background:var(--sm-red)}
 .wnr-sitemap .sm-overview h2{margin:0;max-width:560px;color:var(--sm-ink);font-size:38px;font-weight:800;letter-spacing:-.035em;line-height:1.08}
-.wnr-sitemap .sm-overview p{margin:0;padding:22px 0 0;border-top:3px solid var(--sm-ink);font-size:17px;line-height:1.8;color:var(--sm-text)}
+.wnr-sitemap .sm-overview p{margin:0;padding:22px 0 0;border-top:0;font-size:17px;line-height:1.8;color:var(--sm-text)}
 .wnr-sitemap .sm-directory{padding:72px 0 84px;background:var(--sm-wash)}
 .wnr-sitemap .sm-panel{background:#fff;border:1px solid var(--sm-line);box-shadow:0 16px 40px rgba(17,19,21,.06)}
 .wnr-sitemap .sm-panel+.sm-panel{margin-top:42px}
