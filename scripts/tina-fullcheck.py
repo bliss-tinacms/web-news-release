@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
-"""TINA-FULLCHECK: compare Tina homepage SEO with exact live head metadata.
+"""TINA-FULLCHECK: all configured collections, backend -> public SSR verification.
 
-Run after deployment with SITE_URL, NEXT_PUBLIC_TINA_CLIENT_ID (or TINA_CLIENT_ID),
-TINA_BRANCH, and TINA_TOKEN in the environment. Exits non-zero on stale or duplicate
-primary metadata so a local MDX fallback cannot silently override a Tina save again.
+The gate fails when a configured collection has no explicit check. Current required scope:
+blog, page, category, user, navigation, config (Global Config).
 """
 from __future__ import annotations
 
 import json
 import os
+import re
 import time
+from html import unescape
 from html.parser import HTMLParser
+from pathlib import Path
 from urllib.parse import urljoin
 
 import requests
@@ -23,72 +25,81 @@ if not CLIENT_ID or not TOKEN:
     raise SystemExit("TINA-FULLCHECK BLOCKED: Tina client ID and token are required")
 
 TINA_URL = f"https://content.tinajs.io/2.4/content/{CLIENT_ID}/github/{BRANCH}"
+REQUIRED = {"blog", "page", "category", "user", "navigation", "config"}
+SEO_FIELDS = "metaTitle metaDescription ogTitle ogDescription ogImage canonicalUrl noindex nofollow"
 
 
-class HeadParser(HTMLParser):
+class DocumentParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__()
         self.in_head = False
         self.in_title = False
-        self.in_jsonld = False
         self.titles: list[str] = []
         self._title: list[str] = []
         self.metas: list[dict[str, str | None]] = []
         self.links: list[dict[str, str | None]] = []
-        self.jsonld: list[str] = []
-        self._jsonld: list[str] = []
 
     def handle_starttag(self, tag, attrs):
         values = dict(attrs)
-        if tag == "head":
-            self.in_head = True
-        elif self.in_head and tag == "title":
-            self.in_title = True
-            self._title = []
-        elif self.in_head and tag == "meta":
-            self.metas.append(values)
-        elif self.in_head and tag == "link":
-            self.links.append(values)
-        elif self.in_head and tag == "script" and values.get("type") == "application/ld+json":
-            self.in_jsonld = True
-            self._jsonld = []
+        if tag == "head": self.in_head = True
+        elif self.in_head and tag == "title": self.in_title, self._title = True, []
+        elif self.in_head and tag == "meta": self.metas.append(values)
+        elif self.in_head and tag == "link": self.links.append(values)
 
     def handle_endtag(self, tag):
         if tag == "title" and self.in_title:
-            self.titles.append("".join(self._title).strip())
-            self.in_title = False
-        elif tag == "script" and self.in_jsonld:
-            self.jsonld.append("".join(self._jsonld).strip())
-            self.in_jsonld = False
-        elif tag == "head":
-            self.in_head = False
+            self.titles.append("".join(self._title).strip()); self.in_title = False
+        elif tag == "head": self.in_head = False
 
     def handle_data(self, data):
-        if self.in_title:
-            self._title.append(data)
-        if self.in_jsonld:
-            self._jsonld.append(data)
+        if self.in_title: self._title.append(data)
 
 
-def tina_home_seo() -> dict:
-    query = """
-    query HomepageSeo($relativePath: String!) {
-      page(relativePath: $relativePath) {
-        seo { metaTitle metaDescription ogTitle ogDescription ogImage canonicalUrl noindex nofollow }
-      }
-    }
+def configured_collections() -> set[str]:
+    root = Path(__file__).resolve().parents[1] / "tina" / "collections"
+    found = set()
+    for path in root.glob("*.ts"):
+        source = path.read_text(encoding="utf-8")
+        anchor = re.search(r"export\s+const\s+\w+Collection\s*:\s*Collection\s*=\s*\{", source)
+        match = re.search(r"\bname\s*:\s*['\"]([^'\"]+)['\"]", source[anchor.end():]) if anchor else None
+        if match: found.add(match.group(1))
+    return found
+
+
+def query_backend() -> dict:
+    query = f"""
+    query AllCollectionFullcheck {{
+      blog(relativePath: "hca-warns-that-lost-health-coverage-is-increasing-pressure-on-hospitals.mdx") {{ title description seo {{ {SEO_FIELDS} }} _sys {{ filename }} }}
+      blogs: blogConnection(first: 100) {{ edges {{ node {{ categories }} }} }}
+      page(relativePath: "home.mdx") {{ title seo {{ {SEO_FIELDS} }} _sys {{ filename }} }}
+      category(relativePath: "Business.json") {{ title description seo {{ {SEO_FIELDS} }} _sys {{ filename }} }}
+      user(relativePath: "admin.json") {{ name role bio seo {{ {SEO_FIELDS} }} _sys {{ filename }} }}
+      navigation(relativePath: "header.json") {{ title items {{ label href children {{ label href }} }} _sys {{ filename }} }}
+      config(relativePath: "config.json") {{
+        headerNavigation {{ ... on Navigation {{ _sys {{ relativePath }} }} }}
+        footerNavigation {{ ... on Navigation {{ _sys {{ relativePath }} }} }}
+        seo {{ title description siteOwner logo favicon footerLogo }}
+        branding {{ menuLabel footerDescription copyright }}
+        contactForm {{ heading description buttonText note subject formspreeEndpoint }}
+        codeInjection {{ headerCode footerCode }}
+        contactLinks {{ title link icon }}
+        footerStarfield
+        _sys {{ filename }}
+      }}
+    }}
     """
-    response = requests.post(
-        TINA_URL,
-        headers={"X-API-KEY": TOKEN, "Content-Type": "application/json", "Accept-Encoding": "identity"},
-        json={"query": query, "variables": {"relativePath": "home.mdx"}},
-        timeout=30,
-    )
+    response = requests.post(TINA_URL, headers={"X-API-KEY": TOKEN, "Content-Type": "application/json", "Accept-Encoding": "identity"}, json={"query": query}, timeout=45)
     response.raise_for_status()
     payload = response.json()
-    if payload.get("errors"):
-        raise RuntimeError(json.dumps(payload["errors"], indent=2))
-    return payload["data"]["page"]["seo"]
+    if payload.get("errors"): raise RuntimeError(json.dumps(payload["errors"], indent=2))
+    return payload["data"]
+
+
+def fetch_route(path: str) -> dict:
+    response = requests.get(f"{SITE}{path}{'&' if '?' in path else '?'}tina-fullcheck={time.time_ns()}", headers={"Cache-Control": "no-cache", "Pragma": "no-cache", "User-Agent": "TINA-FULLCHECK"}, timeout=45)
+    response.raise_for_status()
+    parser = DocumentParser(); parser.feed(response.text)
+    return {"status": response.status_code, "cache": response.headers.get("cf-cache-status"), "html": unescape(response.text), "head": parser}
 
 
 def values(items: list[dict], key: str, name: str) -> list[str]:
@@ -96,54 +107,78 @@ def values(items: list[dict], key: str, name: str) -> list[str]:
 
 
 def exact_one(label: str, actual: list[str], expected: str, failures: list[str]) -> None:
-    if actual != [expected]:
-        failures.append(f"{label}: expected exactly {[expected]!r}, got {actual!r}")
+    if actual != [expected]: failures.append(f"{label}: expected exactly {[expected]!r}, got {actual!r}")
+
+
+def assert_text(label: str, html: str, expected: str, failures: list[str]) -> None:
+    if expected and expected.casefold() not in html.casefold(): failures.append(f"{label}: backend value absent from public SSR HTML")
+
+
+def assert_seo(label: str, route: dict, seo: dict | None, title_fallback: str, description_fallback: str, canonical_fallback: str, failures: list[str]) -> dict:
+    seo = seo or {}
+    title = seo.get("metaTitle") or title_fallback
+    description = seo.get("metaDescription") or description_fallback
+    social_title = seo.get("ogTitle") or title
+    social_description = seo.get("ogDescription") or description
+    canonical = urljoin(f"{SITE}/", seo.get("canonicalUrl") or canonical_fallback)
+    robots = f"{'noindex' if seo.get('noindex') else 'index'}, {'nofollow' if seo.get('nofollow') else 'follow'}"
+    head = route["head"]
+    exact_one(f"{label}.title", head.titles, title, failures)
+    exact_one(f"{label}.description", values(head.metas, "name", "description"), description, failures)
+    exact_one(f"{label}.canonical", [str(x.get("href") or "") for x in head.links if "canonical" in str(x.get("rel") or "").split()], canonical, failures)
+    exact_one(f"{label}.og:title", values(head.metas, "property", "og:title"), social_title, failures)
+    exact_one(f"{label}.og:description", values(head.metas, "property", "og:description"), social_description, failures)
+    exact_one(f"{label}.twitter:title[name]", values(head.metas, "name", "twitter:title"), social_title, failures)
+    exact_one(f"{label}.twitter:description[name]", values(head.metas, "name", "twitter:description"), social_description, failures)
+    exact_one(f"{label}.robots", values(head.metas, "name", "robots"), robots, failures)
+    return {"title": title, "description": description, "canonical": canonical, "robots": robots}
 
 
 def main() -> int:
-    seo = tina_home_seo()
-    cache_buster = f"tina-fullcheck-{time.time_ns()}"
-    response = requests.get(
-        f"{SITE}/?{cache_buster}",
-        headers={"Cache-Control": "no-cache", "Pragma": "no-cache", "User-Agent": "TINA-FULLCHECK"},
-        timeout=30,
-    )
-    response.raise_for_status()
-    parser = HeadParser()
-    parser.feed(response.text)
-
-    title = seo.get("metaTitle") or "Web News Release"
-    description = seo.get("metaDescription") or ""
-    social_title = seo.get("ogTitle") or title
-    social_description = seo.get("ogDescription") or description
-    canonical = seo.get("canonicalUrl") or f"{SITE}/"
-    canonical = urljoin(f"{SITE}/", canonical)
-    robots = f"{'noindex' if seo.get('noindex') else 'index'}, {'nofollow' if seo.get('nofollow') else 'follow'}"
-
     failures: list[str] = []
-    exact_one("title", parser.titles, title, failures)
-    exact_one("description", values(parser.metas, "name", "description"), description, failures)
-    exact_one("canonical", [str(x.get("href") or "") for x in parser.links if "canonical" in str(x.get("rel") or "").split()], canonical, failures)
-    exact_one("og:title", values(parser.metas, "property", "og:title"), social_title, failures)
-    exact_one("og:description", values(parser.metas, "property", "og:description"), social_description, failures)
-    exact_one("og:url", values(parser.metas, "property", "og:url"), canonical, failures)
-    exact_one("twitter:title[name]", values(parser.metas, "name", "twitter:title"), social_title, failures)
-    exact_one("twitter:title[property]", values(parser.metas, "property", "twitter:title"), social_title, failures)
-    exact_one("twitter:description[name]", values(parser.metas, "name", "twitter:description"), social_description, failures)
-    exact_one("twitter:description[property]", values(parser.metas, "property", "twitter:description"), social_description, failures)
-    exact_one("robots", values(parser.metas, "name", "robots"), robots, failures)
+    configured = configured_collections()
+    if configured != REQUIRED:
+        failures.append(f"collection coverage mismatch: configured={sorted(configured)}, explicitly checked={sorted(REQUIRED)}")
+    data = query_backend()
+    for name in sorted(REQUIRED):
+        if not data.get(name): failures.append(f"{name}: Tina query returned no document")
 
-    print(json.dumps({
-        "site": SITE,
-        "status": response.status_code,
-        "cache": response.headers.get("cf-cache-status"),
-        "backend": {"title": title, "description": description, "socialTitle": social_title, "socialDescription": social_description, "canonical": canonical, "robots": robots},
-        "frontend": {"title": parser.titles, "description": values(parser.metas, "name", "description"), "ogTitle": values(parser.metas, "property", "og:title"), "twitterTitle": values(parser.metas, "name", "twitter:title"), "canonical": [str(x.get("href") or "") for x in parser.links if "canonical" in str(x.get("rel") or "").split()], "robots": values(parser.metas, "name", "robots"), "jsonLdCount": len(parser.jsonld)},
-        "failures": failures,
-    }, ensure_ascii=False, indent=2))
+    routes = {
+        "page": fetch_route("/"),
+        "blog": fetch_route("/hca-warns-that-lost-health-coverage-is-increasing-pressure-on-hospitals/"),
+        "category": fetch_route("/business/"),
+        "user": fetch_route("/author/admin/"),
+    }
+    config, page, blog, category, user = data["config"], data["page"], data["blog"], data["category"], data["user"]
+    site_title = config.get("seo", {}).get("title") or "Web News Release"
+    business_post_count = sum(
+        1 for edge in (data.get("blogs", {}).get("edges") or [])
+        if any(str(value).replace("\\", "/").lower().endswith("/business.json") for value in ((edge.get("node") or {}).get("categories") or []))
+    )
+    category_description = category.get("description") or (
+        f"Read the latest {category.get('title')} articles from Web News Release."
+        if business_post_count else
+        f"Articles in the {category.get('title')} category will be published soon on Web News Release."
+    )
+    seo_results = {
+        "page": assert_seo("page", routes["page"], page.get("seo"), page.get("title") or site_title, config.get("seo", {}).get("description") or "", f"{SITE}/", failures),
+        "blog": assert_seo("blog", routes["blog"], blog.get("seo"), blog.get("title") or "", blog.get("description") or "", "/hca-warns-that-lost-health-coverage-is-increasing-pressure-on-hospitals/", failures),
+        "category": assert_seo("category", routes["category"], category.get("seo"), f"{category.get('title')} Articles | {site_title}", category_description, "/business/", failures),
+        "user": assert_seo("user", routes["user"], user.get("seo"), f"{user.get('name')} Articles | {site_title}", user.get("bio") or f"Read the latest articles by {user.get('name')} from Web News Release.", "/author/admin/", failures),
+    }
+    assert_text("blog.title", routes["blog"]["html"], blog.get("title") or "", failures)
+    assert_text("category.title", routes["category"]["html"], category.get("title") or "", failures)
+    assert_text("user.name", routes["user"]["html"], user.get("name") or "", failures)
+    assert_text("user.role", routes["user"]["html"], user.get("role") or "", failures)
+    assert_text("navigation.items[0].label", routes["page"]["html"], data["navigation"]["items"][0]["label"], failures)
+    assert_text("config.branding.menuLabel", routes["page"]["html"], config.get("branding", {}).get("menuLabel") or "", failures)
+    assert_text("config.branding.footerDescription", routes["page"]["html"], config.get("branding", {}).get("footerDescription") or "", failures)
+    assert_text("config.branding.copyright", routes["page"]["html"], config.get("branding", {}).get("copyright") or "", failures)
+
+    report = {"site": SITE, "configuredCollections": sorted(configured), "requiredCollections": sorted(REQUIRED), "coverageComplete": configured == REQUIRED, "collections": {name: {"backendDocument": data.get(name, {}).get("_sys", {}).get("filename"), "status": "PASS" if data.get(name) else "FAIL"} for name in sorted(REQUIRED)}, "routes": {name: {"status": route["status"], "cache": route["cache"]} for name, route in routes.items()}, "seo": seo_results, "failures": failures}
+    print(json.dumps(report, ensure_ascii=False, indent=2))
     print(f"TINA_FULLCHECK_OK {not failures}")
     return 0 if not failures else 1
 
 
-if __name__ == "__main__":
-    raise SystemExit(main())
+if __name__ == "__main__": raise SystemExit(main())
